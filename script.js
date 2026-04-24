@@ -159,36 +159,4 @@ document.addEventListener('DOMContentLoaded', () => {
         loadFill.style.width = `${load}%`;
     }, 2000);
 
-    // --- Code Background ---
-    const codeBg = document.getElementById('code-bg');
-    if (codeBg) {
-        const snippets = [
-            'initializing_system_vanguard...',
-            'loading_neural_layers_0x42...',
-            'access_granted:rifqi_root',
-            'bypassing_main_firewall...',
-            'core_temp_stable:38c',
-            'encryption_key_generated:256bit',
-            'scanning_sector_7g_for_threats...',
-            'establishing_uplink_via_satellite_idn'
-        ];
-
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.top = '0';
-        container.style.left = '0';
-        container.style.padding = '40px';
-        container.style.fontFamily = 'Fira Code';
-        container.style.fontSize = '10px';
-        container.style.color = 'rgba(0, 242, 255, 0.1)';
-        container.style.lineHeight = '2';
-        
-        let html = '';
-        for (let i = 0; i < 150; i++) {
-            const snippet = snippets[Math.floor(Math.random() * snippets.length)];
-            html += `<div>[${new Date().toLocaleTimeString()}] ${snippet}</div>`;
-        }
-        container.innerHTML = html;
-        codeBg.appendChild(container);
-    }
 });

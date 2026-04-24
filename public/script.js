@@ -1,5 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ── Leaflet Map (Bengkulu, Indonesia) ─────────────────────────
+    const map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        touchZoom: false,
+    }).setView([-3.7928, 102.2608], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(map);
+
+    // Custom neon marker
+    const neonIcon = L.divIcon({
+        html: `<div style="width:12px;height:12px;background:#00f2ff;border-radius:50%;box-shadow:0 0 10px #00f2ff, 0 0 25px #00f2ff;"></div>`,
+        className: '',
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+    });
+    L.marker([-3.7928, 102.2608], { icon: neonIcon }).addTo(map);
+
     const splash       = document.getElementById('splash');
     const initBtn      = document.getElementById('init-btn');
     const mainContent  = document.getElementById('main-content');

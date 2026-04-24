@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const playlist = [
         { title: "VANGUARD // MIDNIGHT", src: "sound/Midnight.mp3" },
-        { title: "VANGUARD // LET_HIM_COOK", src: "sound/Let Him Cook.mp3" }
+        { title: "VANGUARD // LET_HIM_COOK", src: "sound/Let_Him_Cook.mp3" }
     ];
     let currentTrackIndex = 0;
     let isPlaying = false;
@@ -154,9 +154,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Dynamic HUD Load Animation ---
     const loadFill = document.querySelector('.hud-bar-fill');
+    const statusValue = document.querySelector('.hud-corner.top-left .hud-value');
+    
     setInterval(() => {
         const load = 30 + Math.floor(Math.random() * 20);
-        loadFill.style.width = `${load}%`;
+        if (loadFill) loadFill.style.width = `${load}%`;
+        
+        // Random "Error" status for aesthetic
+        if (statusValue && Math.random() > 0.95) {
+            const original = statusValue.textContent;
+            statusValue.textContent = "404: NOT_FOUND";
+            statusValue.style.color = "var(--neon-magenta)";
+            setTimeout(() => {
+                statusValue.textContent = original;
+                statusValue.style.color = "var(--neon-cyan)";
+            }, 1000);
+        }
     }, 2000);
 
 });

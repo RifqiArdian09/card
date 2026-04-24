@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIFQI | VANGUARD_OS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body class="loading">
+    <div id="splash-screen">
+        <div class="terminal-loader">
+            <div class="loader-text">[VANGUARD_OS_V2.0]</div>
+            <div class="loader-status">INITIALIZING_SYSTEM...</div>
+            <button id="init-btn">INITIATE_SESSION</button>
+        </div>
+    </div>
+
+    <div class="background-container">
+        <div class="void-bg"></div>
+        <div class="nebula"></div>
+        <div class="grid-system"></div>
+        <div class="code-flow" id="code-bg"></div>
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+    </div>
+
+    <!-- HUD Elements -->
+    <div class="hud-layer">
+        <div class="hud-corner top-left">
+            <span class="hud-label">SYSTEM_STATUS</span>
+            <span class="hud-value neon-text">OPERATIONAL</span>
+        </div>
+        <div class="hud-corner top-right">
+            <span class="hud-label">LOCATION</span>
+            <span class="hud-value">SECTOR_7G // IDN</span>
+        </div>
+        <div class="hud-corner bottom-left">
+            <span class="hud-label">CORE_LOAD</span>
+            <div class="hud-bar"><div class="hud-bar-fill" style="width: 42%;"></div></div>
+        </div>
+        <div class="hud-side-text">ACCESS_GRANTED_BY_VANGUARD_OS</div>
+    </div>
+
+    <main class="profile-wrapper">
+        <div class="card-frame">
+            <div class="frame-corner tl"></div>
+            <div class="frame-corner tr"></div>
+            <div class="frame-corner bl"></div>
+            <div class="frame-corner br"></div>
+            
+            <div class="profile-card">
+                <div class="glitch-overlay"></div>
+                
+                <div class="avatar-section">
+                    <div class="avatar-orb">
+                        <div class="orb-ring"></div>
+                        <img src="public/2.png" alt="Avatar" class="avatar">
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h1 class="name-text" data-text="rifqi">rifqi</h1>
+                    <div class="bio-tag">DIGITAL_ARCHITECT</div>
+                    <p class="bio-desc">Synthesizing virtual realities and building the future of code.</p>
+                </div>
+
+                <div class="social-grid">
+                    <a href="https://github.com/RifqiArdian09" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="https://rifqiardian.my.id/" target="_blank" class="social-btn"><i class="fas fa-globe"></i></a>
+                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <audio id="bg-audio" loop>
+        <source src="sound/Midnight.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="vanguard-player">
+        <div class="player-inner">
+            <div class="vinyl-container">
+                <i class="fas fa-record-vinyl vinyl-icon"></i>
+            </div>
+            <div class="track-meta">
+                <span class="track-title">Midnight</span>
+                <div class="v-progress-bg" id="progress-bar-container">
+                    <div class="v-progress-fill" id="progress"></div>
+                </div>
+            </div>
+            <div class="v-controls">
+                <i class="fas fa-step-backward" id="prev-btn"></i>
+                <i class="fas fa-play" id="play-pause-btn"></i>
+                <i class="fas fa-step-forward" id="next-btn"></i>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

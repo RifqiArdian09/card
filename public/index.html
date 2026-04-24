@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFQI | VANGUARD_OS</title>
-    <meta name="description" content="Digital Architect — Building the future of code.">
-    <meta name="theme-color" content="#00f2ff">
-    <meta property="og:title" content="rifqi | digital architect">
-    <meta property="og:description" content="Synthesizing virtual realities and building the future of code.">
+    <title>RIFQI | CREATIVE DEVELOPER</title>
+    <meta name="description" content="Crafting digital experiences through minimal code and brutalist design.">
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="RIFQI | PORTFOLIO">
+    <meta property="og:description" content="Crafting digital experiences through minimal code and brutalist design.">
     <meta property="og:image" content="2.png">
     <meta property="og:type" content="website">
 
@@ -17,27 +17,10 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'neon-cyan': '#00f2ff',
-                        'neon-magenta': '#ff00ff',
-                        'neon-lime': '#39ff14',
-                        'void': '#020204',
-                        'glass': 'rgba(10, 10, 20, 0.6)',
-                        'panel-dark': '#0a0d14',
-                    },
                     fontFamily: {
-                        'outfit': ['Outfit', 'sans-serif'],
-                        'mono': ['Fira Code', 'monospace'],
-                    },
-                    animation: {
-                        'spin-slow': 'spin 12s linear infinite',
-                        'pulse-neon': 'pulseNeon 2s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseNeon: {
-                            '0%, 100%': { boxShadow: '0 0 5px #00f2ff, 0 0 15px #00f2ff' },
-                            '50%': { boxShadow: '0 0 20px #00f2ff, 0 0 50px #00f2ff, 0 0 100px #00f2ff' },
-                        }
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['"Space Mono"', 'monospace'],
                     }
                 }
             }
@@ -45,120 +28,26 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
-
     <style>
         * { cursor: crosshair; box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; overflow-x: hidden; background-color: #020204; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; background-color: #000; color: #fff; }
         a, button, [role="button"] { cursor: pointer; }
 
-        /* Blueprint Grid Background */
-        .blueprint-bg {
-            background-color: #020204;
-            background-image: 
-                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
-        }
+        /* Smooth selections */
+        ::selection { background: #fff; color: #000; }
 
-        /* Glass / Cyber Panel */
-        .cyber-panel {
-            background: rgba(10, 13, 20, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 242, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,242,255,0.02);
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .cyber-panel:hover {
-            border-color: rgba(0, 242, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,242,255,0.05);
-        }
-
-        /* Tech Corners for panels */
-        .tech-corner {
-            position: absolute;
-            width: 15px; height: 15px;
-            border: 2px solid #00f2ff;
-        }
-        .tc-tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-        .tc-tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
-        .tc-bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
-        .tc-br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-
-        /* Glowing text utility */
-        .glow-text {
-            text-shadow: 0 0 15px rgba(0,242,255,0.6);
-        }
-
-        /* Buttons with hover sweep */
-        .cyber-btn {
-            background: rgba(0, 242, 255, 0.02);
-            border: 1px solid rgba(0, 242, 255, 0.15);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .cyber-btn:hover {
-            background: rgba(0, 242, 255, 0.1);
-            border-color: #00f2ff;
-            box-shadow: 0 0 15px rgba(0,242,255,0.2);
-            transform: translateY(-2px);
-        }
-        .cyber-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,242,255,0.2), transparent);
-            transform: skewX(-20deg);
-            transition: 0.5s;
-        }
-        .cyber-btn:hover::after {
-            left: 150%;
-        }
-
-        /* Hexagon Avatar mask */
-        .hex-avatar {
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-
-        /* Radar spinning animation */
-        @keyframes radarScan {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .radar-spinner {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 200px; height: 200px;
-            margin: -100px 0 0 -100px;
-            border-radius: 50%;
-            border: 1px dashed rgba(0, 242, 255, 0.3);
-            animation: radarScan 10s linear infinite;
-        }
-        .radar-spinner::before {
-            content: '';
-            position: absolute;
-            top: -1px; left: 50%;
-            width: 2px; height: 50%;
-            background: #00f2ff;
-            transform-origin: bottom center;
-            box-shadow: 0 0 10px #00f2ff;
-        }
-
-        /* Audio Progress Bar */
-        .progress-fill {
-            transition: width 0.1s linear;
+        /* Typography utils */
+        .outline-text {
+            color: transparent;
+            -webkit-text-stroke: 1px #fff;
         }
 
         /* Vinyl Animation */
-        .vinyl-spin { animation: spin 6s linear infinite; animation-play-state: paused; }
+        .vinyl-spin { animation: spin 4s linear infinite; animation-play-state: paused; }
         .vinyl-spin.playing { animation-play-state: running; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -167,190 +56,113 @@
         #splash { transition: opacity 0.8s ease; }
         #splash.hidden { opacity: 0; pointer-events: none; }
         
-        /* HUD Blink */
-        .hud-blink { animation: blink 1.5s ease-in-out infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        /* Audio Progress Bar */
+        .progress-fill { transition: width 0.1s linear; }
+
+        /* Remove default link outlines */
+        a:focus, button:focus { outline: none; }
+        
+        /* Disable scrollbar for cleaner look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
     </style>
 </head>
 
-<body class="bg-void text-white min-h-screen relative flex items-center justify-center blueprint-bg">
+<body class="bg-black text-white min-h-screen relative flex items-center justify-center selection:bg-white selection:text-black">
 
     <!-- SPLASH SCREEN -->
-    <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020204] font-mono">
-        <div class="absolute inset-0 blueprint-bg opacity-30"></div>
-        <div class="relative z-10 text-center px-10">
-            <i class="fas fa-fingerprint text-5xl text-neon-cyan mb-6" style="filter: drop-shadow(0 0 15px #00f2ff);"></i>
-            <div class="text-neon-cyan text-3xl font-bold tracking-[8px] mb-2" style="text-shadow:0 0 20px #00f2ff;">VANGUARD_OS</div>
-            <div class="text-xs text-white/50 tracking-[4px] mb-12">SYSTEM_INITIALIZATION_REQUIRED</div>
-            
-            <button id="init-btn"
-                class="border border-neon-cyan text-neon-cyan px-10 py-4 text-sm tracking-[5px] font-bold uppercase
-                       hover:bg-neon-cyan hover:text-black transition-all duration-300"
-                style="box-shadow: 0 0 20px rgba(0,242,255,0.2);">
-                ESTABLISH_CONNECTION
-            </button>
-        </div>
+    <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white px-4">
+        <h1 class="font-serif text-6xl uppercase tracking-tighter mb-12 select-none">RIFQI.</h1>
+        <button id="init-btn"
+            class="font-mono text-xs uppercase tracking-[0.3em] border border-white px-10 py-4 
+                   hover:bg-white hover:text-black transition-colors duration-300">
+            ENTER
+        </button>
     </div>
 
-    <!-- MAIN DASHBOARD -->
-    <main id="main-content" class="relative z-30 opacity-0 w-full max-w-7xl mx-auto min-h-screen p-4 md:p-8 flex flex-col justify-center perspective-[2000px]">
+    <!-- MAIN DASHBOARD (Mobile Portrait Locked) -->
+    <main id="main-content" class="relative z-30 w-full max-w-[420px] mx-auto min-h-screen py-8 px-4 flex flex-col justify-center opacity-0 perspective-[2000px]">
         
-        <!-- Frame that receives 3D tilt from JS -->
-        <div id="card-frame" class="w-full">
+        <!-- Grid Frame -->
+        <div id="card-frame" class="w-full bg-white grid grid-cols-1 gap-[1px] border border-white shadow-[0_0_30px_rgba(255,255,255,0.05)]">
             
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
-                
-                <!-- LEFT COLUMN: IDENTITY (Col 1-4) -->
-                <div class="md:col-span-4 flex flex-col gap-6">
-                    <div class="cyber-panel p-8 h-full flex flex-col">
-                        <div class="tech-corner tc-tl"></div>
-                        <div class="tech-corner tc-tr"></div>
-                        <div class="tech-corner tc-bl"></div>
-                        <div class="tech-corner tc-br"></div>
-
-                        <div class="flex justify-between items-start mb-8">
-                            <div class="font-mono text-[10px] text-neon-cyan tracking-widest border border-neon-cyan/30 px-2 py-1 bg-neon-cyan/5">
-                                ID_CARD // 001
-                            </div>
-                            <i class="fas fa-wifi text-neon-cyan/50 text-sm animate-pulse"></i>
-                        </div>
-
-                        <div class="flex justify-center mb-8">
-                            <div class="relative w-40 h-40 p-1 border border-neon-cyan/30 rounded-full flex items-center justify-center">
-                                <div class="absolute inset-0 border-2 border-dashed border-neon-cyan/40 rounded-full animate-spin-slow"></div>
-                                <div id="avatar-wrap" class="w-[90%] h-[90%] hex-avatar bg-neon-cyan/20">
-                                    <img src="2.png" alt="rifqi" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-center mb-6">
-                            <h1 class="font-outfit font-black text-5xl tracking-tighter text-white mb-2" style="text-shadow: 0 0 20px rgba(255,255,255,0.3);">
-                                RIFQI
-                            </h1>
-                            <h2 class="font-mono text-neon-cyan text-sm tracking-[5px]">DIGITAL_ARCHITECT</h2>
-                        </div>
-
-                        <div class="font-mono text-xs text-white/60 leading-relaxed border-l-2 border-neon-cyan pl-4 py-2 bg-gradient-to-r from-neon-cyan/5 to-transparent mb-8">
-                            Synthesizing virtual realities &<br>building the future of code.
-                        </div>
-
-                        <div class="mt-auto pt-4 border-t border-white/10">
-                            <div class="flex justify-between text-[10px] font-mono text-white/40 mb-2 tracking-widest">
-                                <span>SYS_LOAD</span>
-                                <span id="hud-status" class="text-neon-cyan hud-blink">OPERATIONAL</span>
-                            </div>
-                            <div class="h-[3px] bg-white/10 rounded-full overflow-hidden">
-                                <div id="hud-load" class="h-full bg-neon-cyan" style="width: 65%; box-shadow: 0 0 10px #00f2ff;"></div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- HEADER -->
+            <div class="bg-black p-8">
+                <div class="font-mono text-[10px] uppercase tracking-[0.2em] flex justify-between opacity-50 mb-10">
+                    <span>Portfolio</span>
+                    <span>2026</span>
                 </div>
-
-                <!-- RIGHT COLUMN: MODULES (Col 5-12) -->
-                <div class="md:col-span-8 flex flex-col gap-6">
-                    
-                    <!-- VISUALIZER HEADER -->
-                    <div class="cyber-panel h-48 md:h-64 flex-shrink-0 flex items-center justify-center overflow-hidden relative">
-                        <div class="tech-corner tc-tl"></div>
-                        <div class="tech-corner tc-tr"></div>
-                        
-                        <!-- Radar / Globe effect -->
-                        <div class="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none">
-                            <div class="radar-spinner"></div>
-                            <div class="w-[300px] h-[300px] border border-neon-cyan/10 rounded-full absolute"></div>
-                            <div class="w-[400px] h-[400px] border border-neon-cyan/5 rounded-full absolute"></div>
-                        </div>
-
-                        <!-- Data overlay -->
-                        <div class="relative z-10 text-center pointer-events-none">
-                            <div class="text-5xl md:text-7xl font-black text-transparent opacity-20 tracking-tighter" style="-webkit-text-stroke: 1px #00f2ff;">
-                                VANGUARD_OS
-                            </div>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="bg-[#020204]/80 px-6 py-2 border border-neon-cyan/30 backdrop-blur-sm">
-                                    <span class="font-mono text-sm tracking-[8px] text-neon-cyan glow-text">ACCESS_GRANTED</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Grid lines overlay -->
-                        <div class="absolute inset-0" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,242,255,0.03) 2px, rgba(0,242,255,0.03) 4px); pointer-events:none;"></div>
-                    </div>
-
-                    <!-- BOTTOM ROW SPLIT -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-                        
-                        <!-- AUDIO PLAYER -->
-                        <div id="player" class="cyber-panel p-6 flex flex-col justify-between">
-                            <div class="tech-corner tc-bl"></div>
-                            
-                            <div class="font-mono text-[10px] text-white/40 tracking-widest mb-6 border-b border-white/10 pb-2 flex justify-between">
-                                <span>MEDIA_PLAYER</span>
-                                <i class="fas fa-satellite-dish text-neon-cyan"></i>
-                            </div>
-
-                            <div class="flex items-center gap-5 mb-8">
-                                <div class="w-16 h-16 rounded-full border-2 border-neon-cyan/30 flex items-center justify-center bg-black/50 flex-shrink-0 relative">
-                                    <div class="absolute inset-0 border border-neon-cyan/10 rounded-full animate-ping" style="animation-duration: 3s;"></div>
-                                    <i class="fas fa-record-vinyl text-3xl text-neon-cyan vinyl-spin glow-text" id="vinyl-icon"></i>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="text-[10px] text-neon-magenta font-mono tracking-widest mb-1">NOW_PLAYING</div>
-                                    <div id="track-title" class="font-bold text-lg tracking-wider text-white truncate w-full">MIDNIGHT</div>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="flex items-center justify-between gap-6 mb-4 px-2">
-                                    <i class="fas fa-step-backward text-xl cursor-pointer hover:text-neon-cyan transition-colors text-white/50 hover:glow-text" id="prev-btn"></i>
-                                    <i class="fas fa-play text-2xl w-12 h-12 rounded-full bg-neon-cyan/10 border border-neon-cyan/50 flex items-center justify-center cursor-pointer hover:bg-neon-cyan hover:text-black transition-all duration-300 text-neon-cyan" id="play-pause-btn"></i>
-                                    <i class="fas fa-step-forward text-xl cursor-pointer hover:text-neon-cyan transition-colors text-white/50 hover:glow-text" id="next-btn"></i>
-                                </div>
-                                
-                                <div class="h-[3px] bg-white/10 w-full cursor-pointer relative rounded overflow-hidden" id="progress-bar-container">
-                                    <div class="absolute left-0 top-0 h-full bg-neon-cyan progress-fill shadow-[0_0_10px_#00f2ff]" id="progress" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- SOCIAL LINKS -->
-                        <div class="cyber-panel p-6 flex flex-col">
-                            <div class="tech-corner tc-br"></div>
-                            
-                            <div class="font-mono text-[10px] text-white/40 tracking-widest mb-6 border-b border-white/10 pb-2 flex justify-between">
-                                <span>COMMS_LINK</span>
-                                <i class="fas fa-network-wired text-neon-cyan"></i>
-                            </div>
-
-                            <div id="social-links" class="grid grid-cols-2 gap-3 h-full">
-                                <a href="https://github.com/RifqiArdian09" target="_blank" class="cyber-btn social-btn flex flex-col items-center justify-center gap-2 p-3 rounded-sm group text-white">
-                                    <i class="fab fa-github text-2xl text-white/70 group-hover:text-neon-cyan transition-colors"></i>
-                                    <span class="font-mono text-[10px] tracking-widest text-white/50 group-hover:text-white">GITHUB</span>
-                                </a>
-                                <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="cyber-btn social-btn flex flex-col items-center justify-center gap-2 p-3 rounded-sm group text-white">
-                                    <i class="fab fa-linkedin-in text-2xl text-white/70 group-hover:text-neon-cyan transition-colors"></i>
-                                    <span class="font-mono text-[10px] tracking-widest text-white/50 group-hover:text-white">LINKEDIN</span>
-                                </a>
-                                <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="cyber-btn social-btn flex flex-col items-center justify-center gap-2 p-3 rounded-sm group text-white">
-                                    <i class="fab fa-instagram text-2xl text-white/70 group-hover:text-neon-cyan transition-colors"></i>
-                                    <span class="font-mono text-[10px] tracking-widest text-white/50 group-hover:text-white">INSTAGRAM</span>
-                                </a>
-                                <a href="https://rifqiardian.my.id/" target="_blank" class="cyber-btn social-btn flex flex-col items-center justify-center gap-2 p-3 rounded-sm group text-white">
-                                    <i class="fas fa-globe text-2xl text-white/70 group-hover:text-neon-cyan transition-colors"></i>
-                                    <span class="font-mono text-[10px] tracking-widest text-white/50 group-hover:text-white">PORTFOLIO</span>
-                                </a>
-                                <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="cyber-btn social-btn col-span-2 flex items-center justify-center gap-3 p-3 rounded-sm group bg-neon-cyan/5 text-white">
-                                    <i class="fab fa-whatsapp text-xl text-neon-cyan group-hover:text-black transition-colors"></i>
-                                    <span class="font-mono text-[11px] tracking-[3px] text-neon-cyan group-hover:text-black font-bold">SECURE_COMM (WHATSAPP)</span>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+                <h1 class="font-serif text-6xl md:text-[5rem] uppercase leading-none tracking-tighter mb-4 hover:outline-text transition-all duration-500">RIFQI.</h1>
+                <p class="font-mono text-xs font-light uppercase tracking-[0.2em]">Creative Developer</p>
             </div>
+
+            <!-- AVATAR -->
+            <div class="bg-black relative group overflow-hidden h-[300px]">
+                <img src="2.png" alt="Rifqi" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
+                    <span class="font-mono text-[10px] uppercase tracking-widest border border-white px-4 py-2 bg-black/50 backdrop-blur-sm">PROFILE</span>
+                </div>
+            </div>
+
+            <!-- PLAYER -->
+            <div id="player" class="bg-black p-6 flex flex-col justify-center">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-record-vinyl text-xl vinyl-spin" id="vinyl-icon"></i>
+                        <div class="min-w-0">
+                            <div class="font-mono text-[9px] uppercase tracking-[0.2em] opacity-50 mb-1">Now Playing</div>
+                            <div id="track-title" class="font-sans font-bold text-sm uppercase tracking-widest truncate w-[110px]">MIDNIGHT</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-step-backward text-sm cursor-pointer hover:opacity-50 transition-opacity" id="prev-btn"></i>
+                        <i class="fas fa-play text-xl cursor-pointer hover:opacity-50 transition-opacity" id="play-pause-btn"></i>
+                        <i class="fas fa-step-forward text-sm cursor-pointer hover:opacity-50 transition-opacity" id="next-btn"></i>
+                    </div>
+                </div>
+                <div class="h-[2px] bg-white/20 w-full cursor-pointer relative" id="progress-bar-container">
+                    <div class="absolute left-0 top-0 h-full bg-white progress-fill" id="progress" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- BIO -->
+            <div class="bg-white text-black p-8">
+                <p class="font-sans text-[15px] leading-relaxed font-medium mb-8">
+                    Crafting digital experiences through minimal code and brutalist design.
+                </p>
+                <div class="flex justify-between items-end border-t border-black/20 pt-4">
+                    <p class="font-mono text-[9px] uppercase tracking-widest">Location</p>
+                    <p class="font-serif text-lg uppercase tracking-tighter">INDONESIA</p>
+                </div>
+            </div>
+
+            <!-- LINKS 1 (2 Cols) -->
+            <div class="bg-black grid grid-cols-2 gap-[1px]">
+                <a href="https://github.com/RifqiArdian09" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-3 p-6 hover:bg-white hover:text-black transition-colors duration-300 group">
+                    <i class="fab fa-github text-3xl group-hover:-rotate-12 transition-transform duration-300"></i>
+                    <span class="font-mono uppercase text-[10px] tracking-widest font-bold">Github</span>
+                </a>
+                <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-3 p-6 hover:bg-white hover:text-black transition-colors duration-300 group">
+                    <i class="fab fa-linkedin-in text-3xl group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span class="font-mono uppercase text-[10px] tracking-widest font-bold">LinkedIn</span>
+                </a>
+            </div>
+
+            <!-- LINKS 2 (3 Cols) -->
+            <div class="bg-black grid grid-cols-3 gap-[1px]">
+                <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
+                    <i class="fab fa-instagram text-xl group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-mono text-[9px] uppercase tracking-widest">Insta</span>
+                </a>
+                <a href="https://rifqiardian.my.id/" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
+                    <i class="fas fa-globe text-xl group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-mono text-[9px] uppercase tracking-widest">Web</span>
+                </a>
+                <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
+                    <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform duration-300"></i>
+                    <span class="font-mono text-[9px] uppercase tracking-widest">Chat</span>
+                </a>
+            </div>
+
         </div>
     </main>
 

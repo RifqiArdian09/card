@@ -3,334 +3,584 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFQI | VANGUARD_OS</title>
-    <meta name="description" content="Digital Architect — Building the future of code.">
+    <title>rifqi.sys — Mission Brief</title>
+    <meta name="description" content="Digital Architect | Bengkulu, Indonesia">
     <meta name="theme-color" content="#00f2ff">
-    <meta property="og:title" content="rifqi | digital architect">
-    <meta property="og:description" content="Synthesizing virtual realities and building the future of code.">
+    <meta property="og:title" content="rifqi.sys">
+    <meta property="og:description" content="Digital Architect — Bengkulu, Indonesia">
     <meta property="og:image" content="2.png">
-    <meta property="og:type" content="website">
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'neon-cyan': '#00f2ff',
-                        'neon-magenta': '#ff00ff',
-                        'neon-lime': '#39ff14',
-                        'void': '#020204',
-                        'glass': 'rgba(10, 10, 20, 0.6)',
-                    },
-                    fontFamily: {
-                        'outfit': ['Outfit', 'sans-serif'],
-                        'mono': ['Fira Code', 'monospace'],
-                    },
-                    animation: {
-                        'spin-slow': 'spin 8s linear infinite',
-                        'pulse-neon': 'pulseNeon 2s ease-in-out infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'scan': 'scanline 5s linear infinite',
-                        'mesh': 'meshMove 60s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseNeon: {
-                            '0%, 100%': { boxShadow: '0 0 5px #00f2ff, 0 0 15px #00f2ff' },
-                            '50%': { boxShadow: '0 0 20px #00f2ff, 0 0 50px #00f2ff, 0 0 100px #00f2ff' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        scanline: {
-                            '0%': { top: '-100%' },
-                            '100%': { top: '200%' },
-                        },
-                        meshMove: {
-                            '0%, 100%': { transform: 'scale(1) rotate(0deg)' },
-                            '50%': { transform: 'scale(1.05) rotate(2deg)' },
-                        },
-                    }
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'c': '#00f2ff',
+                    'm': '#ff00ff',
+                    'g': '#39ff14',
+                    'void': '#020206',
+                },
+                fontFamily: {
+                    'sans': ['Outfit', 'sans-serif'],
+                    'mono': ['Fira Code', 'monospace'],
                 }
             }
         }
+    }
     </script>
 
-    <!-- Leaflet CSS -->
+    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * { cursor: crosshair; box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
-
-        /* Mesh background */
-        .mesh-bg {
-            background-image:
-                linear-gradient(rgba(0,242,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,242,255,0.04) 1px, transparent 1px),
-                radial-gradient(rgba(0,242,255,0.07) 1.5px, transparent 1.5px);
-            background-size: 60px 60px, 60px 60px, 30px 30px;
-            animation: meshMove 60s ease-in-out infinite;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --c: #00f2ff;
+            --m: #ff00ff;
+            --g: #39ff14;
+        }
+        * { cursor: crosshair; }
+        a, button { cursor: pointer; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #020206;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Scanline effect on card */
-        .card-scan::before {
-            content: '';
-            position: absolute;
-            left: 0; right: 0;
-            height: 40%;
-            background: linear-gradient(to bottom, transparent, rgba(0,242,255,0.04), transparent);
-            animation: scanline 5s linear infinite;
+        /* ─── CANVAS BACKGROUND ─── */
+        #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+        /* ─── VIGNETTE ─── */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 20%, rgba(2,2,6,0.92) 100%);
+            z-index: 1;
             pointer-events: none;
-            z-index: 10;
         }
 
-        /* Avatar ring */
-        .avatar-ring::after {
+        /* ─── HUD CORNERS ─── */
+        .hud { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+        .hc { position: absolute; width: 28px; height: 28px; }
+        .hc::before, .hc::after { content: ''; position: absolute; background: var(--c); }
+        .hc::before { width: 100%; height: 2px; top: 0; }
+        .hc::after  { width: 2px; height: 100%; top: 0; }
+        .hc.tl { top: 20px; left: 20px; }
+        .hc.tr { top: 20px; right: 20px; transform: scaleX(-1); }
+        .hc.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+        .hc.br { bottom: 20px; right: 20px; transform: scale(-1); }
+
+        .hud-tag {
+            position: absolute;
+            font-family: 'Fira Code', monospace;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            opacity: 0.4;
+            color: var(--c);
+        }
+        .hud-tag.tl { top: 52px; left: 20px; }
+        .hud-tag.tr { top: 52px; right: 20px; text-align: right; }
+        .hud-tag.bl { bottom: 52px; left: 20px; }
+        .hud-tag.br { bottom: 52px; right: 20px; text-align: right; }
+
+        /* ─── SPLASH ─── */
+        #splash {
+            position: fixed; inset: 0; z-index: 100;
+            background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Fira Code', monospace;
+            transition: opacity 0.9s ease;
+        }
+        #splash.out { opacity: 0; pointer-events: none; }
+
+        .splash-logo {
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            color: var(--c);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            text-shadow: 0 0 20px var(--c);
+            animation: flicker 3s ease-in-out infinite;
+        }
+        .splash-sub {
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            opacity: 0.35;
+            margin-bottom: 48px;
+        }
+        #init-btn {
+            border: 1px solid var(--c);
+            color: var(--c);
+            background: transparent;
+            padding: 10px 32px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            transition: all 0.25s;
+            box-shadow: 0 0 12px rgba(0,242,255,0.15);
+        }
+        #init-btn:hover {
+            background: var(--c);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0,242,255,0.5);
+            transform: scale(1.04);
+        }
+
+        /* ─── MAIN WRAPPER ─── */
+        #app {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+        #app.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── LEFT PANEL ─── */
+        .panel-left {
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* ─── RIGHT PANEL (MAIN CARD) ─── */
+        .panel-right {
+            width: 340px;
+        }
+
+        /* ─── GLASS BLOCK ─── */
+        .glass {
+            background: rgba(6,6,14,0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,242,255,0.12);
+            position: relative;
+        }
+        .glass::before {
             content: '';
             position: absolute;
-            inset: -6px;
-            border: 1.5px dashed rgba(0,242,255,0.6);
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--c), transparent);
+            opacity: 0.4;
+        }
+
+        /* ─── SECTION HEADER ─── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-family: 'Fira Code', monospace;
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            color: var(--c);
+            opacity: 0.6;
+        }
+        .section-header .dot {
+            width: 5px; height: 5px;
             border-radius: 50%;
-            animation: spin 10s linear infinite;
+            background: var(--c);
+            box-shadow: 0 0 6px var(--c);
+            animation: pulse-dot 2s ease-in-out infinite;
         }
 
-        /* Glow text */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(0,242,255,0.5), 0 0 30px rgba(0,242,255,0.2);
+        /* ─── AVATAR ─── */
+        .avatar-block { padding: 20px; text-align: center; }
+        .avatar-wrap {
+            position: relative;
+            width: 96px; height: 96px;
+            margin: 0 auto 14px;
+        }
+        .avatar-wrap img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(0,242,255,0.3);
+            position: relative;
+            z-index: 2;
+        }
+        .avatar-ring {
+            position: absolute;
+            inset: -7px;
+            border: 1px dashed rgba(0,242,255,0.4);
+            border-radius: 50%;
+            animation: spin-slow 12s linear infinite;
+        }
+        .avatar-ring2 {
+            position: absolute;
+            inset: -14px;
+            border: 1px solid rgba(255,0,255,0.15);
+            border-radius: 50%;
+            animation: spin-slow 20s linear infinite reverse;
         }
 
-        /* Social button hover */
-        .social-btn {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
+        .callsign {
+            font-size: 11px;
+            font-family: 'Fira Code', monospace;
+            letter-spacing: 0.3em;
+            color: var(--c);
+            margin-bottom: 4px;
+            text-shadow: 0 0 8px var(--c);
         }
-        .social-btn:hover {
-            background: #00f2ff;
-            color: #000;
-            box-shadow: 0 0 20px rgba(0,242,255,0.6);
-            transform: translateY(-6px) rotate(8deg);
-        }
-
-        /* Corner brackets */
-        .corner-tl { border-top: 2px solid #00f2ff; border-left: 2px solid #00f2ff; }
-        .corner-tr { border-top: 2px solid #00f2ff; border-right: 2px solid #00f2ff; }
-        .corner-bl { border-bottom: 2px solid #00f2ff; border-left: 2px solid #00f2ff; }
-        .corner-br { border-bottom: 2px solid #00f2ff; border-right: 2px solid #00f2ff; }
-
-        /* Progress bar */
-        .progress-fill {
-            transition: width 0.1s linear;
-            box-shadow: 0 0 8px #00f2ff;
+        .alias {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Vinyl spin */
-        .vinyl-spin { animation: spin 6s linear infinite; animation-play-state: paused; }
-        .vinyl-spin.playing { animation-play-state: running; }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes scanline { 0% { top: -100%; } 100% { top: 200%; } }
-        @keyframes meshMove {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.05) rotate(1.5deg); }
+        /* ─── STAT ROWS ─── */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-family: 'Fira Code', monospace;
         }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .stat-key { font-size: 9px; opacity: 0.4; letter-spacing: 0.15em; text-transform: uppercase; }
+        .stat-val { font-size: 11px; opacity: 0.85; }
+        .stat-val.c { color: var(--c); text-shadow: 0 0 8px var(--c); }
+        .stat-val.m { color: var(--m); }
+        .stat-val.g { color: var(--g); }
+
+        /* ─── SKILL BARS ─── */
+        .skill-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Fira Code', monospace;
+            font-size: 9px;
+            opacity: 0.5;
+            margin-bottom: 3px;
+        }
+        .skill-track { height: 2px; background: rgba(255,255,255,0.06); border-radius: 1px; overflow: hidden; }
+        .skill-fill {
+            height: 100%;
+            background: var(--c);
+            box-shadow: 0 0 6px var(--c);
+            border-radius: 1px;
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+        }
+        .skill-fill.m { background: var(--m); box-shadow: 0 0 6px var(--m); }
+        .skill-fill.g { background: var(--g); box-shadow: 0 0 6px var(--g); }
+
+        /* ─── NAME / BIO PANEL ─── */
+        .name-giant {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -3px;
+            padding: 24px 20px 0;
+            background: linear-gradient(to bottom, #fff 30%, rgba(255,255,255,0.35));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .name-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--m);
+            padding: 6px 20px 18px;
+            opacity: 0.8;
+        }
+        .bio-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.45);
+            padding: 0 20px 20px;
         }
 
-        /* Splash */
-        #splash { transition: opacity 0.8s ease; }
-        #splash.hidden { opacity: 0; pointer-events: none; }
+        /* ─── SOCIAL LINKS (command style) ─── */
+        .cmd-links { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+        .cmd-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.6);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .cmd-link:hover {
+            background: rgba(0,242,255,0.05);
+            border-color: rgba(0,242,255,0.2);
+            color: var(--c);
+            transform: translateX(4px);
+        }
+        .cmd-link:hover .cmd-icon { color: var(--c); }
+        .cmd-prompt { color: var(--c); opacity: 0.4; font-size: 11px; }
+        .cmd-icon { width: 16px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); transition: 0.2s; }
+        .cmd-text { flex: 1; }
+        .cmd-arrow { font-size: 9px; opacity: 0; transition: opacity 0.2s; }
+        .cmd-link:hover .cmd-arrow { opacity: 0.5; }
 
-        /* HUD blink */
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .hud-blink { animation: blink 1.5s ease-in-out infinite; }
+        /* ─── MAP ─── */
+        #map {
+            height: 120px;
+            filter: brightness(0.6) saturate(0.3) hue-rotate(165deg);
+            border-top: 1px solid rgba(0,242,255,0.1);
+        }
+        .map-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 30px;
+            background: linear-gradient(to top, rgba(6,6,14,1), transparent);
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        /* ─── MUSIC PLAYER ─── */
+        #player {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            opacity: 0;
+            z-index: 50;
+            background: rgba(4,4,10,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,242,255,0.15);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 300px;
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+        }
+        #player.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .vinyl {
+            font-size: 22px;
+            color: var(--c);
+            text-shadow: 0 0 10px var(--c);
+            animation: spin-slow 6s linear infinite;
+            animation-play-state: paused;
+        }
+        .vinyl.playing { animation-play-state: running; }
+        .p-info { flex: 1; min-width: 0; }
+        .p-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
+        .p-bar { height: 2px; background: rgba(255,255,255,0.08); cursor: pointer; }
+        .p-fill { height: 100%; background: var(--c); box-shadow: 0 0 8px var(--c); transition: width 0.1s linear; }
+        .p-ctrl { display: flex; gap: 14px; font-size: 13px; color: var(--c); }
+        .p-ctrl i { cursor: pointer; opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
+        .p-ctrl i:hover { opacity: 1; transform: scale(1.2); }
+
+        /* ─── LIVE CLOCK ─── */
+        #live-clock { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--c); text-shadow: 0 0 8px var(--c); }
+
+        /* ─── KEYFRAMES ─── */
+        @keyframes spin-slow  { to { transform: rotate(360deg); } }
+        @keyframes pulse-dot  { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+        @keyframes flicker    { 0%,100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.2; } 94% { opacity: 1; } 96% { opacity: 0.5; } 97% { opacity: 1; } }
     </style>
 </head>
+<body>
 
-<body class="bg-void text-white h-screen flex items-center justify-center relative">
+<!-- Canvas background -->
+<canvas id="bg-canvas"></canvas>
+<div class="vignette"></div>
 
-    <!-- ===== BACKGROUND ===== -->
-    <div class="fixed inset-0 z-0">
-        <!-- Deep void -->
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, #05050f 0%, #000 100%);"></div>
-        <!-- Nebula glow -->
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 25% 25%, rgba(0,242,255,0.04) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,0,255,0.04) 0%, transparent 50%); animation: meshMove 30s ease-in-out infinite alternate;"></div>
-        <!-- Digital mesh -->
-        <div class="absolute inset-0 mesh-bg opacity-60"></div>
-        <!-- Vignette -->
-        <div class="absolute inset-0" style="background: radial-gradient(circle at center, transparent 25%, rgba(0,0,0,0.85) 100%);"></div>
-        <!-- Scanlines -->
-        <div class="absolute inset-0" style="background: repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 4px); pointer-events:none;"></div>
-    </div>
+<!-- HUD Corners -->
+<div class="hud">
+    <div class="hc tl"></div><div class="hc tr"></div>
+    <div class="hc bl"></div><div class="hc br"></div>
+    <div class="hud-tag tl">VANGUARD_OS / v2.4</div>
+    <div class="hud-tag tr" id="live-clock">--:--:--</div>
+    <div class="hud-tag bl">SEC_LEVEL: ALPHA</div>
+    <div class="hud-tag br">BENGKULU // IDN</div>
+</div>
 
-    <!-- ===== HUD LAYER ===== -->
-    <div class="fixed inset-0 z-20 pointer-events-none p-7 font-mono">
-        <!-- Top Left -->
-        <div class="absolute top-7 left-7 border-l-2 border-neon-cyan pl-3">
-            <div class="text-[9px] opacity-40 tracking-widest mb-1">SYSTEM_STATUS</div>
-            <div class="text-sm font-semibold tracking-wider text-neon-cyan hud-blink" id="hud-status" style="text-shadow:0 0 10px #00f2ff">OPERATIONAL</div>
-        </div>
-        <!-- Top Right -->
-        <div class="absolute top-7 right-7 border-r-2 border-neon-cyan pr-3 text-right">
-            <div class="text-[9px] opacity-40 tracking-widest mb-1">LOCATION</div>
-            <div class="text-xs font-semibold tracking-wider">SECTOR_7G // IDN</div>
-        </div>
-        <!-- Bottom Left -->
-        <div class="absolute bottom-7 left-7 w-40">
-            <div class="text-[9px] opacity-40 tracking-widest mb-2">CORE_LOAD</div>
-            <div class="h-[3px] bg-white/10 rounded overflow-hidden">
-                <div class="h-full bg-neon-cyan rounded" id="hud-load" style="width:42%; box-shadow: 0 0 8px #00f2ff; transition: width 1.5s ease;"></div>
-            </div>
-        </div>
-        <!-- Vertical text -->
-        <div class="absolute right-[-55px] top-1/2 -translate-y-1/2 text-[9px] tracking-[6px] opacity-20" style="transform: translateY(-50%) rotate(90deg);">ACCESS_GRANTED_BY_VANGUARD_OS</div>
-    </div>
+<!-- Splash -->
+<div id="splash">
+    <div class="splash-logo">[ VANGUARD_OS ]</div>
+    <div class="splash-sub">RIFQI.SYS — MISSION_BRIEF_LOADER</div>
+    <button id="init-btn">▶ ACCESS GRANTED</button>
+</div>
 
-    <!-- ===== SPLASH SCREEN ===== -->
-    <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black font-mono">
-        <div class="text-center px-10">
-            <div class="text-neon-cyan text-2xl font-bold tracking-[6px] mb-2" style="text-shadow:0 0 20px #00f2ff;">[VANGUARD_OS_V2.0]</div>
-            <div class="text-xs opacity-40 tracking-[3px] mb-10">INITIALIZING_DIGITAL_ARCHITECT...</div>
-            <button id="init-btn"
-                class="border border-neon-cyan text-neon-cyan px-8 py-3 text-sm tracking-widest font-mono
-                       hover:bg-neon-cyan hover:text-black transition-all duration-300"
-                style="box-shadow: 0 0 15px rgba(0,242,255,0.2);">
-                INITIATE_SESSION
-            </button>
-        </div>
-    </div>
+<!-- App -->
+<div id="app">
 
-    <!-- ===== MAIN PROFILE CARD ===== -->
-    <main id="main-content" class="relative z-30 opacity-0" style="perspective: 2000px;">
-        <!-- Frame brackets -->
-        <div class="relative p-3" id="card-frame">
-            <div class="corner-tl absolute top-0 left-0 w-8 h-8"></div>
-            <div class="corner-tr absolute top-0 right-0 w-8 h-8"></div>
-            <div class="corner-bl absolute bottom-0 left-0 w-8 h-8"></div>
-            <div class="corner-br absolute bottom-0 right-0 w-8 h-8"></div>
+    <!-- LEFT PANEL -->
+    <div class="panel-left">
 
-            <!-- Glass Card -->
-            <div id="profile-card"
-                class="relative w-[360px] card-scan overflow-hidden"
-                style="background: rgba(8,8,16,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 40px 80px rgba(0,0,0,0.8);">
-
-                <!-- Top accent line -->
-                <div class="h-[2px] w-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50"></div>
-
-                <div class="px-10 py-12 flex flex-col items-center gap-0">
-
-                    <!-- Avatar -->
-                    <div class="relative mb-7 avatar-ring" id="avatar-wrap" style="animation: float 6s ease-in-out infinite;">
-                        <img src="2.png" alt="rifqi"
-                            class="w-28 h-28 rounded-full object-cover"
-                            style="border: 3px solid #000; box-shadow: 0 0 25px rgba(0,242,255,0.25);">
-                    </div>
-
-                    <!-- Name -->
-                    <h1 class="font-outfit font-black text-4xl tracking-tighter mb-1 glow-text"
-                        style="background: linear-gradient(to bottom, #fff 40%, #666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        rifqi
-                    </h1>
-
-                    <!-- Tag -->
-                    <div class="font-mono text-[11px] tracking-[3px] text-neon-magenta mb-4 px-3 py-1"
-                         style="background: rgba(255,0,255,0.08); border: 1px solid rgba(255,0,255,0.15);">
-                        DIGITAL_ARCHITECT
-                    </div>
-
-                    <!-- Bio -->
-                    <p class="text-sm text-white/50 text-center leading-relaxed mb-8">
-                        Synthesizing virtual realities<br>and building the future of code.
-                    </p>
-
-                    <!-- Social Buttons -->
-                    <div class="flex gap-3" id="social-links">
-                        <a href="https://github.com/RifqiArdian09" target="_blank"
-                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
-                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank"
-                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
-                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://www.instagram.com/rifqiard._/" target="_blank"
-                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
-                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://rifqiardian.my.id/" target="_blank"
-                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
-                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                            <i class="fas fa-globe"></i>
-                        </a>
-                        <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank"
-                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
-                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-
+        <!-- Avatar block -->
+        <div class="glass">
+            <div class="section-header"><div class="dot"></div> AGENT.PROFILE</div>
+            <div class="avatar-block">
+                <div class="avatar-wrap">
+                    <div class="avatar-ring2"></div>
+                    <div class="avatar-ring"></div>
+                    <img src="2.png" alt="rifqi">
                 </div>
-
-                <!-- Location Map -->
-                <div class="w-full px-10 pb-8">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="fas fa-location-dot text-xs" style="color:#00f2ff;"></i>
-                        <span class="font-mono text-[10px] tracking-widest opacity-50">BENGKULU_INDONESIA</span>
-                    </div>
-                    <div id="map" style="height: 140px; border: 1px solid rgba(0,242,255,0.15); filter: brightness(0.7) saturate(0.4) hue-rotate(160deg);"></div>
-                </div>
-
-                <!-- Bottom accent line -->
-                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                <div class="callsign">// RIFQI</div>
+                <div class="alias">rifqi</div>
             </div>
         </div>
-    </main>
 
-    <!-- ===== FLOATING MUSIC PLAYER ===== -->
-    <div id="player"
-         class="fixed bottom-8 right-8 z-40 opacity-0"
-         style="background: rgba(8,8,16,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(0,242,255,0.2); padding: 12px 18px; min-width: 280px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
-
-        <div class="flex items-center gap-4">
-            <!-- Vinyl icon -->
-            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                 style="border: 1px solid rgba(0,242,255,0.4); background: #000;">
-                <i class="fas fa-record-vinyl text-xl text-neon-cyan vinyl-spin" id="vinyl-icon" style="text-shadow: 0 0 10px #00f2ff;"></i>
+        <!-- Stats block -->
+        <div class="glass">
+            <div class="section-header"><div class="dot"></div> SYSTEM.STATS</div>
+            <div class="stat-row">
+                <span class="stat-key">STATUS</span>
+                <span class="stat-val g">● ONLINE</span>
             </div>
+            <div class="stat-row">
+                <span class="stat-key">ROLE</span>
+                <span class="stat-val c">DEV</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-key">BASE</span>
+                <span class="stat-val">BENGKULU</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-key">CLASS</span>
+                <span class="stat-val m">ARCHITECT</span>
+            </div>
+        </div>
 
-            <!-- Track info -->
-            <div class="flex-1 min-w-0">
-                <span class="block text-[13px] font-semibold font-mono tracking-wide truncate text-white" id="track-title">MIDNIGHT</span>
-                <div class="h-[2px] bg-white/10 rounded mt-2 cursor-pointer" id="progress-bar-container">
-                    <div class="h-full bg-neon-cyan rounded progress-fill" id="progress" style="width: 0%;"></div>
+        <!-- Skills block -->
+        <div class="glass">
+            <div class="section-header"><div class="dot"></div> CORE.SKILLS</div>
+            <div class="skill-row">
+                <div class="skill-label"><span>Frontend</span><span>90%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-w="90"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="skill-label"><span>Backend</span><span>75%</span></div>
+                <div class="skill-track"><div class="skill-fill m" data-w="75"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="skill-label"><span>UI/UX</span><span>82%</span></div>
+                <div class="skill-track"><div class="skill-fill g" data-w="82"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="skill-label"><span>DevOps</span><span>60%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-w="60"></div></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel-right">
+        <div class="glass" style="height: 100%;">
+
+            <div class="section-header"><div class="dot"></div> MISSION.BRIEF</div>
+
+            <div class="name-giant">rifqi</div>
+            <div class="name-tag">// DIGITAL_ARCHITECT</div>
+
+            <div class="bio-text" id="bio-text"></div>
+
+            <!-- Command-style links -->
+            <div class="glass" style="margin: 0 12px 12px; border-color: rgba(255,255,255,0.05);">
+                <div class="section-header" style="font-size:8px;"><div class="dot"></div> LINK.NODES</div>
+                <div class="cmd-links">
+                    <a href="https://github.com/RifqiArdian09" target="_blank" class="cmd-link">
+                        <span class="cmd-prompt">$</span>
+                        <i class="cmd-icon fab fa-github"></i>
+                        <span class="cmd-text">github.com/RifqiArdian09</span>
+                        <span class="cmd-arrow">→</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="cmd-link">
+                        <span class="cmd-prompt">$</span>
+                        <i class="cmd-icon fab fa-linkedin-in"></i>
+                        <span class="cmd-text">linkedin/rifqi-ardian</span>
+                        <span class="cmd-arrow">→</span>
+                    </a>
+                    <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="cmd-link">
+                        <span class="cmd-prompt">$</span>
+                        <i class="cmd-icon fab fa-instagram"></i>
+                        <span class="cmd-text">instagram/@rifqiard._</span>
+                        <span class="cmd-arrow">→</span>
+                    </a>
+                    <a href="https://rifqiardian.my.id/" target="_blank" class="cmd-link">
+                        <span class="cmd-prompt">$</span>
+                        <i class="cmd-icon fas fa-globe"></i>
+                        <span class="cmd-text">rifqiardian.my.id</span>
+                        <span class="cmd-arrow">→</span>
+                    </a>
+                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="cmd-link">
+                        <span class="cmd-prompt">$</span>
+                        <i class="cmd-icon fab fa-whatsapp"></i>
+                        <span class="cmd-text">wa.me/rifqiardian</span>
+                        <span class="cmd-arrow">→</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- Controls -->
-            <div class="flex items-center gap-3 text-sm text-white/70 flex-shrink-0">
-                <i class="fas fa-step-backward cursor-pointer hover:text-neon-cyan transition-colors" id="prev-btn"></i>
-                <i class="fas fa-play cursor-pointer hover:text-neon-cyan transition-colors text-neon-cyan" id="play-pause-btn" style="text-shadow: 0 0 8px #00f2ff;"></i>
-                <i class="fas fa-step-forward cursor-pointer hover:text-neon-cyan transition-colors" id="next-btn"></i>
+            <!-- Map -->
+            <div style="position:relative; margin: 0 0 0 0;">
+                <div class="section-header" style="margin: 0 12px; border-bottom:none; margin-bottom: 4px;"><div class="dot"></div> GEO.SIGNAL // BENGKULU</div>
+                <div id="map"></div>
+                <div class="map-overlay"></div>
             </div>
+
         </div>
     </div>
 
-    <audio id="bg-audio" loop></audio>
+</div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+<!-- Music Player -->
+<div id="player">
+    <i class="fas fa-record-vinyl vinyl" id="vinyl"></i>
+    <div class="p-info">
+        <div class="p-title" id="track-title">MIDNIGHT</div>
+        <div class="p-bar" id="progress-bar-container">
+            <div class="p-fill" id="progress" style="width:0%"></div>
+        </div>
+    </div>
+    <div class="p-ctrl">
+        <i class="fas fa-step-backward" id="prev-btn"></i>
+        <i class="fas fa-play" id="play-pause-btn"></i>
+        <i class="fas fa-step-forward" id="next-btn"></i>
+    </div>
+</div>
+
+<audio id="bg-audio" loop></audio>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

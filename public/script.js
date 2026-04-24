@@ -1,206 +1,200 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── Leaflet Map (Bengkulu, Indonesia) ─────────────────────────
+    // ── Canvas Neural Network Background ──────────────────────────────
+    const canvas = document.getElementById('bg-canvas');
+    const ctx    = canvas.getContext('2d');
+    let W, H, particles;
+
+    function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        initParticles();
+    }
+
+    function initParticles() {
+        particles = Array.from({ length: 70 }, () => ({
+            x:  Math.random() * W,
+            y:  Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            r:  Math.random() * 1.5 + 0.5,
+        }));
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 130) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0,242,255,${0.08 * (1 - dist/130)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw nodes
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0,242,255,0.25)';
+            ctx.fill();
+
+            // Move
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+        });
+
+        requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    drawParticles();
+
+    // ── Leaflet Map ───────────────────────────────────────────────────
     const map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false,
-        dragging: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-        touchZoom: false,
+        zoomControl: false, attributionControl: false,
+        dragging: false, scrollWheelZoom: false,
+        doubleClickZoom: false, touchZoom: false,
     }).setView([-3.7928, 102.2608], 12);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
 
-    // Custom neon marker
     const neonIcon = L.divIcon({
-        html: `<div style="width:12px;height:12px;background:#00f2ff;border-radius:50%;box-shadow:0 0 10px #00f2ff, 0 0 25px #00f2ff;"></div>`,
-        className: '',
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
+        html: `<div style="width:10px;height:10px;background:#00f2ff;border-radius:50%;box-shadow:0 0 12px #00f2ff,0 0 30px #00f2ff;"></div>`,
+        className: '', iconSize: [10, 10], iconAnchor: [5, 5],
     });
     L.marker([-3.7928, 102.2608], { icon: neonIcon }).addTo(map);
 
-    const splash       = document.getElementById('splash');
-    const initBtn      = document.getElementById('init-btn');
-    const mainContent  = document.getElementById('main-content');
-    const player       = document.getElementById('player');
-    const cardFrame    = document.getElementById('card-frame');
+    // ── Live Clock (WIB = UTC+7) ──────────────────────────────────────
+    const clockEl = document.getElementById('live-clock');
+    function updateClock() {
+        const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
+        const hh = String(now.getHours()).padStart(2,'0');
+        const mm = String(now.getMinutes()).padStart(2,'0');
+        const ss = String(now.getSeconds()).padStart(2,'0');
+        clockEl.textContent = `${hh}:${mm}:${ss} WIB`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
 
-    // ── Audio ──────────────────────────────────────────────────────
-    const bgAudio          = document.getElementById('bg-audio');
-    const playPauseBtn     = document.getElementById('play-pause-btn');
-    const prevBtn          = document.getElementById('prev-btn');
-    const nextBtn          = document.getElementById('next-btn');
-    const vinylIcon        = document.getElementById('vinyl-icon');
-    const progressBar      = document.getElementById('progress');
-    const progressContainer= document.getElementById('progress-bar-container');
-    const songTitle        = document.getElementById('track-title');
+    // ── Typewriter Bio ────────────────────────────────────────────────
+    const bioEl   = document.getElementById('bio-text');
+    const bioStr  = 'Synthesizing virtual realities and building the future of code. Specializing in modern web architecture, UI systems, and digital experiences that push boundaries.';
+    let bioIdx = 0;
 
-    const playlist = [
-        { title: 'MIDNIGHT',      src: 'sound/Midnight.mp3'      },
-        { title: 'LET_HIM_COOK',  src: 'sound/Let_Him_Cook.mp3'  }
-    ];
-    let currentTrack = 0;
-    let isPlaying    = false;
-
-    function loadTrack(index) {
-        const t = playlist[index];
-        bgAudio.src = t.src;
-        songTitle.textContent = t.title;
-        progressBar.style.width = '0%';
-        if (isPlaying) bgAudio.play().catch(() => {});
+    function typeBio() {
+        if (bioIdx < bioStr.length) {
+            bioEl.textContent += bioStr[bioIdx++];
+            setTimeout(typeBio, 22);
+        }
     }
 
-    function setPlayState(playing) {
-        isPlaying = playing;
-        if (playing) {
-            playPauseBtn.classList.replace('fa-play', 'fa-pause');
-            vinylIcon.classList.add('playing');
-        } else {
-            playPauseBtn.classList.replace('fa-pause', 'fa-play');
-            vinylIcon.classList.remove('playing');
-        }
+    // ── Skill bars animate in ─────────────────────────────────────────
+    function animateSkills() {
+        document.querySelectorAll('.skill-fill').forEach(el => {
+            setTimeout(() => { el.style.width = el.dataset.w + '%'; }, 200);
+        });
+    }
+
+    // ── Audio / Playlist ──────────────────────────────────────────────
+    const bgAudio   = document.getElementById('bg-audio');
+    const ppBtn     = document.getElementById('play-pause-btn');
+    const prevBtn   = document.getElementById('prev-btn');
+    const nextBtn   = document.getElementById('next-btn');
+    const vinyl     = document.getElementById('vinyl');
+    const pBar      = document.getElementById('progress');
+    const pContainer= document.getElementById('progress-bar-container');
+    const titleEl   = document.getElementById('track-title');
+
+    const playlist  = [
+        { title: 'MIDNIGHT',     src: 'sound/Midnight.mp3'     },
+        { title: 'LET_HIM_COOK', src: 'sound/Let_Him_Cook.mp3' },
+    ];
+    let trackIdx = 0, playing = false;
+
+    function loadTrack(i) {
+        const t = playlist[i];
+        bgAudio.src   = t.src;
+        titleEl.textContent = t.title;
+        pBar.style.width = '0%';
+        if (playing) bgAudio.play().catch(() => {});
+    }
+
+    function setPlay(state) {
+        playing = state;
+        ppBtn.classList.toggle('fa-play',  !state);
+        ppBtn.classList.toggle('fa-pause',  state);
+        vinyl.classList.toggle('playing',   state);
     }
 
     bgAudio.volume = 0.5;
-
     bgAudio.addEventListener('timeupdate', () => {
         if (bgAudio.duration)
-            progressBar.style.width = `${(bgAudio.currentTime / bgAudio.duration) * 100}%`;
+            pBar.style.width = `${(bgAudio.currentTime / bgAudio.duration) * 100}%`;
+    });
+    bgAudio.addEventListener('ended', () => { trackIdx = (trackIdx + 1) % playlist.length; loadTrack(trackIdx); });
+    pContainer.addEventListener('click', e => {
+        if (bgAudio.duration) bgAudio.currentTime = (e.offsetX / pContainer.clientWidth) * bgAudio.duration;
     });
 
-    bgAudio.addEventListener('ended', () => {
-        currentTrack = (currentTrack + 1) % playlist.length;
-        loadTrack(currentTrack);
-    });
-
-    progressContainer.addEventListener('click', (e) => {
-        if (bgAudio.duration)
-            bgAudio.currentTime = (e.offsetX / progressContainer.clientWidth) * bgAudio.duration;
-    });
-
-    playPauseBtn.addEventListener('click', (e) => {
+    ppBtn.addEventListener('click', e => {
         e.stopPropagation();
-        if (isPlaying) { bgAudio.pause(); setPlayState(false); }
-        else           { bgAudio.play().then(() => setPlayState(true)).catch(() => {}); }
+        if (playing) { bgAudio.pause(); setPlay(false); }
+        else { bgAudio.play().then(() => setPlay(true)).catch(() => {}); }
+    });
+    nextBtn.addEventListener('click', e => { e.stopPropagation(); trackIdx=(trackIdx+1)%playlist.length; loadTrack(trackIdx); });
+    prevBtn.addEventListener('click', e => { e.stopPropagation(); trackIdx=(trackIdx-1+playlist.length)%playlist.length; loadTrack(trackIdx); });
+
+    // ── Splash → Reveal ───────────────────────────────────────────────
+    document.getElementById('init-btn').addEventListener('click', () => {
+        // Audio start
+        loadTrack(trackIdx);
+        bgAudio.play().then(() => setPlay(true)).catch(() => {});
+
+        // Hide splash
+        const splash = document.getElementById('splash');
+        splash.classList.add('out');
+        setTimeout(() => splash.style.display = 'none', 900);
+
+        // Show app
+        const app = document.getElementById('app');
+        setTimeout(() => app.classList.add('visible'), 100);
+
+        // Show player
+        setTimeout(() => document.getElementById('player').classList.add('visible'), 500);
+
+        // Typewriter bio
+        setTimeout(typeBio, 600);
+
+        // Skill bars
+        setTimeout(animateSkills, 700);
     });
 
-    nextBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentTrack = (currentTrack + 1) % playlist.length;
-        loadTrack(currentTrack);
-    });
-
-    prevBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-        loadTrack(currentTrack);
-    });
-
-    // ── Splash / Initiation ────────────────────────────────────────
-    function showMain() {
-        // Hide splash with CSS transition
-        splash.style.opacity = '0';
-        splash.style.pointerEvents = 'none';
-        setTimeout(() => { splash.style.display = 'none'; }, 800);
-
-        // Show main card + player
-        mainContent.style.transition = 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1)';
-        mainContent.style.transform  = 'translateY(20px)';
-        mainContent.style.opacity    = '0';
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                mainContent.style.opacity   = '1';
-                mainContent.style.transform = 'translateY(0)';
-            });
-        });
-
-        // Player slides in after short delay
-        setTimeout(() => {
-            player.style.transition = 'opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1)';
-            player.style.transform  = 'translateY(20px)';
-            player.style.opacity    = '0';
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    player.style.opacity   = '1';
-                    player.style.transform = 'translateY(0)';
-                });
-            });
-        }, 300);
-
-        // Stagger social buttons in
-        const btns = document.querySelectorAll('.social-btn');
-        btns.forEach((btn, i) => {
-            btn.style.opacity   = '0';
-            btn.style.transform = 'translateY(16px) scale(0.8)';
-            btn.style.transition = `opacity 0.4s ease ${0.5 + i * 0.08}s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${0.5 + i * 0.08}s`;
-            setTimeout(() => {
-                btn.style.opacity   = '1';
-                btn.style.transform = 'translateY(0) scale(1)';
-            }, 20);
-        });
-    }
-
-    initBtn.addEventListener('click', () => {
-        // Load and attempt autoplay
-        loadTrack(currentTrack);
-        bgAudio.play()
-            .then(() => setPlayState(true))
-            .catch(() => setPlayState(false));  // Silent fail — user can click play
-
-        showMain();
-    });
-
-    // ── 3D Card Tilt (Pure CSS transforms) ────────────────────────
-    document.addEventListener('mousemove', (e) => {
+    // ── 3D Mouse Tilt ─────────────────────────────────────────────────
+    const app = document.getElementById('app');
+    document.addEventListener('mousemove', e => {
         const cx = window.innerWidth  / 2;
         const cy = window.innerHeight / 2;
-        const rx =  (e.clientY - cy) / 35;
-        const ry = -(e.clientX - cx) / 35;
-        cardFrame.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        cardFrame.style.transition = 'transform 0.15s linear';
+        const rx =  (e.clientY - cy) / 40;
+        const ry = -(e.clientX - cx) / 40;
+        app.style.transform    = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        app.style.transition   = 'transform 0.12s linear';
+        app.style.perspective  = '1200px';
     });
-
     document.addEventListener('mouseleave', () => {
-        cardFrame.style.transition = 'transform 0.8s cubic-bezier(0.16,1,0.3,1)';
-        cardFrame.style.transform  = 'rotateX(0deg) rotateY(0deg)';
+        app.style.transform  = 'rotateX(0) rotateY(0)';
+        app.style.transition = 'transform 0.9s cubic-bezier(0.16,1,0.3,1)';
     });
-
-    // ── Social button click micro-animation ───────────────────────
-    document.querySelectorAll('.social-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.style.transform = 'scale(0.85)';
-            this.style.transition = 'transform 0.1s ease';
-            setTimeout(() => {
-                this.style.transform = '';
-                this.style.transition = 'all 0.3s cubic-bezier(0.175,0.885,0.32,1.275)';
-            }, 120);
-        });
-    });
-
-    // ── HUD dynamics ──────────────────────────────────────────────
-    const hudLoad   = document.getElementById('hud-load');
-    const hudStatus = document.getElementById('hud-status');
-
-    setInterval(() => {
-        if (hudLoad) hudLoad.style.width = `${30 + Math.floor(Math.random() * 25)}%`;
-
-        if (hudStatus && Math.random() > 0.93) {
-            const orig = hudStatus.textContent;
-            const origColor = hudStatus.style.color;
-            const origShadow = hudStatus.style.textShadow;
-            hudStatus.textContent   = '404: ERR_DETECTED';
-            hudStatus.style.color   = '#ff00ff';
-            hudStatus.style.textShadow = '0 0 10px #ff00ff';
-            setTimeout(() => {
-                hudStatus.textContent      = orig;
-                hudStatus.style.color      = origColor;
-                hudStatus.style.textShadow = origShadow;
-            }, 900);
-        }
-    }, 2500);
 });

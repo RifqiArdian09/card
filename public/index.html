@@ -3,354 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFQI | VANGUARD_OS</title>
-    <meta name="description" content="Digital Architect — Bengkulu, Indonesia">
-    <meta name="theme-color" content="#00f2ff">
-    <meta property="og:title" content="rifqi :: digital_architect">
-    <meta property="og:description" content="Synthesizing virtual realities and building the future of code.">
+    <title>rifqi — digital architect</title>
+    <meta name="description" content="rifqi ardian · digital architect · bengkulu, indonesia">
+    <meta name="theme-color" content="#000010">
+    <meta property="og:title" content="rifqi — digital architect">
+    <meta property="og:description" content="Bengkulu, Indonesia · Building things that matter.">
     <meta property="og:image" content="2.png">
-
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --cyan: #00f2ff;
-            --magenta: #ff00ff;
-            --lime: #39ff14;
-            --bg: #020204;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
-        body { background: var(--bg); color: #fff; font-family: 'Fira Code', monospace; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        a, button { cursor: pointer; }
-
-        /* ── tsParticles Canvas ─────────────────── */
-        #tsparticles {
-            position: fixed; inset: 0; z-index: 0;
-        }
-
-        /* ── Vignette ──────────────────────────── */
-        .vignette {
-            position: fixed; inset: 0; z-index: 1;
-            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.92) 100%);
-            pointer-events: none;
-        }
-
-        /* ── Scanlines ─────────────────────────── */
-        .scanlines {
-            position: fixed; inset: 0; z-index: 2; pointer-events: none;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 3px);
-        }
-
-        /* ── HUD ───────────────────────────────── */
-        #hud { position: fixed; inset: 0; z-index: 5; pointer-events: none; padding: 28px; font-family: 'Fira Code', monospace; }
-        .hud-corner { position: absolute; }
-        .hud-tl { top: 28px; left: 28px; border-left: 2px solid var(--cyan); padding-left: 10px; }
-        .hud-tr { top: 28px; right: 28px; border-right: 2px solid var(--cyan); padding-right: 10px; text-align: right; }
-        .hud-bl { bottom: 28px; left: 28px; }
-        .hud-label { font-size: 9px; letter-spacing: 3px; opacity: 0.4; margin-bottom: 4px; }
-        .hud-val { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-        .hud-blink { animation: blink 1.8s ease-in-out infinite; }
-        .hud-bar { height: 2px; background: rgba(255,255,255,0.08); margin-top: 8px; width: 160px; }
-        .hud-bar-fill { height: 100%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); transition: width 1.5s ease; }
-
-        /* ── SPLASH ────────────────────────────── */
-        #splash {
-            position: fixed; inset: 0; z-index: 100;
-            background: #000;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.9s ease;
-        }
-        #splash.out { opacity: 0; pointer-events: none; }
-
-        .terminal-window {
-            width: 480px;
-            border: 1px solid rgba(0,242,255,0.25);
-            background: rgba(2,2,8,0.95);
-            box-shadow: 0 0 60px rgba(0,242,255,0.08);
-        }
-        .terminal-bar {
-            background: rgba(0,242,255,0.06);
-            border-bottom: 1px solid rgba(0,242,255,0.1);
-            padding: 10px 16px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .t-red   { background: #ff5f57; }
-        .t-yellow{ background: #febc2e; }
-        .t-green { background: #28c840; }
-        .t-title { font-size: 11px; opacity: 0.5; letter-spacing: 2px; margin-left: auto; }
-
-        .terminal-body { padding: 24px; min-height: 180px; }
-        .t-line { font-size: 12px; line-height: 2; color: rgba(255,255,255,0.7); }
-        .t-line .prompt { color: var(--lime); }
-        .t-line .cmd    { color: var(--cyan); }
-        .t-line .key    { color: var(--magenta); }
-        .t-line .val    { color: var(--lime); }
-        .t-line .ok     { color: var(--lime); }
-        .t-line .err    { color: #ff4444; }
-        #cursor { display: inline-block; width: 8px; height: 14px; background: var(--cyan); vertical-align: middle; animation: blink 0.8s step-end infinite; margin-left: 2px; }
-
-        #init-btn {
-            display: block; width: 100%;
-            padding: 14px;
-            border: none; border-top: 1px solid rgba(0,242,255,0.15);
-            background: rgba(0,242,255,0.05);
-            color: var(--cyan); font-family: 'Fira Code', monospace; font-size: 13px;
-            letter-spacing: 4px; cursor: pointer;
-            transition: all 0.3s;
-        }
-        #init-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px rgba(0,242,255,0.4); }
-        #init-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        /* ── CARD ──────────────────────────────── */
-        #main-content { z-index: 10; perspective: 2000px; opacity: 0; transition: opacity 0.8s ease; }
-
-        .frame-corner { position: absolute; width: 24px; height: 24px; }
-        .fc-tl { top: 0; left: 0; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
-        .fc-tr { top: 0; right: 0; border-top: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
-        .fc-bl { bottom: 0; left: 0; border-bottom: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
-        .fc-br { bottom: 0; right: 0; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
-
-        #card-frame { position: relative; padding: 8px; transition: transform 0.15s linear; transform-style: preserve-3d; }
-
-        #profile-card {
-            width: 360px;
-            background: rgba(6, 6, 14, 0.82);
-            backdrop-filter: blur(28px);
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 0 0 1px rgba(0,242,255,0.05), 0 40px 80px rgba(0,0,0,0.9);
-            position: relative; overflow: hidden;
-        }
-
-        /* Scan line over card */
-        #profile-card::before {
-            content: ''; position: absolute; left: 0; right: 0; height: 35%;
-            background: linear-gradient(to bottom, transparent, rgba(0,242,255,0.03), transparent);
-            animation: scanCard 5s linear infinite; pointer-events: none; z-index: 2;
-        }
-        @keyframes scanCard { 0%{top:-40%} 100%{top:140%} }
-
-        .card-top-line { height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: 0.5; }
-
-        /* ── GLITCH NAME ───────────────────────── */
-        .glitch {
-            position: relative;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 900; font-size: 3.5rem;
-            letter-spacing: -2px;
-            background: linear-gradient(to bottom, #fff 40%, #555 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute; top: 0; left: 0;
-            background: linear-gradient(to bottom, #fff 40%, #555 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .glitch::before {
-            left: 2px; text-shadow: none;
-            animation: glitch1 4s infinite linear;
-            clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-        }
-        .glitch::after {
-            left: -2px;
-            animation: glitch2 4s infinite linear;
-            clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
-        }
-        @keyframes glitch1 {
-            0%,94%,100%  { transform: translate(0); filter: none; }
-            95%   { transform: translate(-3px, 1px); filter: hue-rotate(90deg); }
-            96%   { transform: translate(3px, -1px); }
-            97%   { transform: translate(0); }
-        }
-        @keyframes glitch2 {
-            0%,92%,100%  { transform: translate(0); filter: none; }
-            93%   { transform: translate(3px, 2px); filter: hue-rotate(-90deg); }
-            94%   { transform: translate(-3px, -1px); }
-            95%   { transform: translate(0); }
-        }
-
-        /* ── Avatar ────────────────────────────── */
-        @keyframes orbit { to { transform: rotate(360deg); } }
-        @keyframes float6 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        .avatar-float { animation: float6 6s ease-in-out infinite; }
-        .orbit-ring { position: absolute; inset: -8px; border: 1.5px dashed rgba(0,242,255,0.4); border-radius: 50%; animation: orbit 12s linear infinite; }
-        .orbit-ring2 { position: absolute; inset: -18px; border: 1px dashed rgba(255,0,255,0.2); border-radius: 50%; animation: orbit 20s linear infinite reverse; }
-
-        /* ── Social ────────────────────────────── */
-        .soc {
-            width: 44px; height: 44px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; color: rgba(255,255,255,0.7);
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-        }
-        .soc:hover { background: var(--cyan); color: #000; box-shadow: 0 0 20px rgba(0,242,255,0.5); transform: translateY(-6px) rotate(8deg); }
-
-        /* ── Map ────────────────────────────────── */
-        #map { height: 120px; border: 1px solid rgba(0,242,255,0.12); filter: brightness(0.65) saturate(0.3) hue-rotate(160deg); }
-
-        /* ── Player ────────────────────────────── */
-        #player {
-            position: fixed; bottom: 28px; right: 28px; z-index: 20;
-            background: rgba(4,4,12,0.92); backdrop-filter: blur(20px);
-            border: 1px solid rgba(0,242,255,0.18);
-            padding: 12px 16px; min-width: 270px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.7s ease 0.4s, transform 0.7s cubic-bezier(0.16,1,0.3,1) 0.4s;
-        }
-        #player.show { opacity: 1; transform: translateY(0); }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .vinyl { font-size: 22px; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); animation: spin 6s linear infinite; animation-play-state: paused; }
-        .vinyl.playing { animation-play-state: running; }
-
-        .prog-bg { height: 2px; background: rgba(255,255,255,0.08); border-radius: 1px; cursor: pointer; margin-top: 6px; }
-        .prog-fill { height: 100%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); transition: width 0.1s linear; }
-        .ctrl-btn { font-size: 13px; color: rgba(255,255,255,0.6); cursor: pointer; transition: 0.2s; }
-        .ctrl-btn:hover { color: var(--cyan); transform: scale(1.2); }
-        .ctrl-play { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
-    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- tsParticles -->
-<div id="tsparticles"></div>
-<div class="vignette"></div>
-<div class="scanlines"></div>
+<!-- Aurora WebGL Background -->
+<canvas id="aurora"></canvas>
 
-<!-- HUD -->
-<div id="hud">
-    <div class="hud-corner hud-tl">
-        <div class="hud-label">SYSTEM_STATUS</div>
-        <div class="hud-val hud-blink" id="hud-status">OPERATIONAL</div>
-    </div>
-    <div class="hud-corner hud-tr">
-        <div class="hud-label">NODE</div>
-        <div class="hud-val">BENGKULU // IDN</div>
-    </div>
-    <div class="hud-corner hud-bl">
-        <div class="hud-label">CORE_LOAD</div>
-        <div class="hud-bar"><div class="hud-bar-fill" id="hud-load" style="width:42%"></div></div>
-    </div>
-</div>
+<!-- Grain overlay -->
+<div id="grain"></div>
 
-<!-- SPLASH / TERMINAL -->
+<!-- Vignette -->
+<div id="vignette"></div>
+
+<!-- ── SPLASH ─────────────────────── -->
 <div id="splash">
-    <div class="terminal-window">
-        <div class="terminal-bar">
-            <div class="t-dot t-red"></div>
-            <div class="t-dot t-yellow"></div>
-            <div class="t-dot t-green"></div>
-            <div class="t-title">VANGUARD_OS — bash — 80×24</div>
-        </div>
-        <div class="terminal-body" id="terminal-body">
-            <div id="terminal-lines"></div>
-            <span id="cursor"></span>
-        </div>
-        <button id="init-btn" disabled>[ LOADING... ]</button>
+    <div id="splash-inner">
+        <div id="splash-name">rifqi</div>
+        <div id="splash-sub">digital architect</div>
+        <div id="splash-bar-wrap"><div id="splash-bar"></div></div>
+        <div id="splash-hint">— click to enter —</div>
     </div>
 </div>
 
-<!-- MAIN PROFILE -->
-<main id="main-content">
-    <div id="card-frame">
-        <div class="frame-corner fc-tl"></div>
-        <div class="frame-corner fc-tr"></div>
-        <div class="frame-corner fc-bl"></div>
-        <div class="frame-corner fc-br"></div>
+<!-- ── MAIN ──────────────────────── -->
+<main id="main">
 
-        <div id="profile-card">
-            <div class="card-top-line"></div>
+    <!-- Holographic Card -->
+    <div id="card-scene">
+        <div id="card" role="main">
+            <!-- Holo foil layer -->
+            <div id="holo"></div>
 
-            <div style="padding: 48px 36px 0; display:flex; flex-direction:column; align-items:center; gap:0; text-align:center;">
+            <!-- Edge glow -->
+            <div id="card-edge"></div>
 
-                <!-- Avatar -->
-                <div class="avatar-float" style="position:relative; width:120px; height:120px; margin-bottom:28px;">
-                    <div class="orbit-ring"></div>
-                    <div class="orbit-ring2"></div>
-                    <img src="2.png" alt="rifqi"
-                         style="width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #000;box-shadow:0 0 30px rgba(0,242,255,0.2);position:relative;z-index:1;">
+            <!-- Content -->
+            <div id="card-content">
+
+                <!-- Header -->
+                <div id="card-header">
+                    <div id="avatar-wrap">
+                        <img src="2.png" alt="rifqi" id="avatar">
+                        <div id="avatar-ring"></div>
+                    </div>
+                    <div id="header-text">
+                        <h1 id="name">rifqi</h1>
+                        <div id="role">digital_architect</div>
+                        <div id="location"><i class="fas fa-location-dot"></i> Bengkulu, Indonesia</div>
+                    </div>
                 </div>
 
-                <!-- Name with glitch -->
-                <h1 class="glitch" data-text="rifqi">rifqi</h1>
+                <!-- Divider -->
+                <div class="divider"></div>
 
-                <!-- Terminal tag -->
-                <div style="font-size:11px;letter-spacing:3px;color:var(--magenta);background:rgba(255,0,255,0.07);border:1px solid rgba(255,0,255,0.15);padding:3px 12px;margin:10px 0 6px;">
-                    DIGITAL_ARCHITECT
+                <!-- Bio -->
+                <p id="bio">
+                    Building interfaces that feel alive. Passionate about clean systems, creative code, and beautiful experiences.
+                </p>
+
+                <!-- Stats row -->
+                <div id="stats">
+                    <div class="stat"><span class="stat-val">3+</span><span class="stat-lbl">yrs exp</span></div>
+                    <div class="stat-sep"></div>
+                    <div class="stat"><span class="stat-val">20+</span><span class="stat-lbl">projects</span></div>
+                    <div class="stat-sep"></div>
+                    <div class="stat"><span class="stat-val">∞</span><span class="stat-lbl">coffee</span></div>
                 </div>
 
-                <!-- Inline terminal bio -->
-                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:28px;line-height:1.8;">
-                    <span style="color:var(--lime);">$</span>
-                    <span style="color:var(--cyan);"> cat bio.txt</span><br>
-                    <span style="color:rgba(255,255,255,0.6);">Synthesizing virtual realities</span><br>
-                    <span style="color:rgba(255,255,255,0.6);">and building the future of code.</span>
+                <!-- Divider -->
+                <div class="divider"></div>
+
+                <!-- Social links -->
+                <div id="socials">
+                    <a href="https://github.com/RifqiArdian09" target="_blank" class="soc-link" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="soc-link" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="soc-link" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://rifqiardian.my.id/" target="_blank" class="soc-link" title="Website">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="soc-link" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
                 </div>
 
-                <!-- Social icons -->
-                <div style="display:flex;gap:10px;margin-bottom:28px;" id="social-links">
-                    <a href="https://github.com/RifqiArdian09" target="_blank" class="soc"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="soc"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="soc"><i class="fab fa-instagram"></i></a>
-                    <a href="https://rifqiardian.my.id/" target="_blank" class="soc"><i class="fas fa-globe"></i></a>
-                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="soc"><i class="fab fa-whatsapp"></i></a>
+                <!-- Map -->
+                <div id="map-wrap">
+                    <div id="map-label"><i class="fas fa-satellite-dish"></i> live_location</div>
+                    <div id="map"></div>
                 </div>
+
             </div>
-
-            <!-- Map -->
-            <div style="padding: 0 24px 24px;">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                    <i class="fas fa-location-dot" style="font-size:10px;color:var(--cyan);"></i>
-                    <span style="font-size:9px;letter-spacing:3px;opacity:0.4;">BENGKULU_INDONESIA</span>
-                </div>
-                <div id="map"></div>
-            </div>
-
-            <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);"></div>
         </div>
     </div>
+
 </main>
 
-<!-- Music Player -->
+<!-- ── MUSIC PLAYER ───────────────── -->
 <div id="player">
-    <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:42px;height:42px;border-radius:50%;background:#000;border:1px solid rgba(0,242,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <i class="fas fa-record-vinyl vinyl" id="vinyl-icon"></i>
+    <div id="player-track">
+        <i class="fas fa-record-vinyl" id="vinyl"></i>
+        <div id="player-meta">
+            <div id="track-name">MIDNIGHT</div>
+            <div id="prog-wrap"><div id="prog"></div></div>
         </div>
-        <div style="flex:1;min-width:0;overflow:hidden;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="track-title">MIDNIGHT</div>
-            <div class="prog-bg" id="progress-bar-container">
-                <div class="prog-fill" id="progress" style="width:0%"></div>
-            </div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;flex-shrink:0;">
-            <i class="fas fa-step-backward ctrl-btn" id="prev-btn"></i>
-            <i class="fas fa-play ctrl-btn ctrl-play" id="play-pause-btn"></i>
-            <i class="fas fa-step-forward ctrl-btn" id="next-btn"></i>
-        </div>
+    </div>
+    <div id="player-ctrls">
+        <i class="fas fa-backward-step ctrl" id="prev-btn"></i>
+        <i class="fas fa-play ctrl play-ctrl" id="play-btn"></i>
+        <i class="fas fa-forward-step ctrl" id="next-btn"></i>
     </div>
 </div>
 
-<audio id="bg-audio" loop></audio>
+<audio id="audio" loop></audio>
 
-<!-- tsParticles -->
-<script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
-<!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>

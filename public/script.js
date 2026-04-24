@@ -15,6 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar      = document.getElementById('progress');
     const progressContainer= document.getElementById('progress-bar-container');
     const songTitle        = document.getElementById('track-title');
+    const currentTimeEl    = document.getElementById('current-time');
+    const totalTimeEl      = document.getElementById('total-time');
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ":" + (s < 10 ? "0" + s : s);
+    }
 
     const playlist = [
         { title: 'MIDNIGHT',      src: 'sound/Midnight.mp3'      },
@@ -28,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bgAudio.src = t.src;
         songTitle.textContent = t.title;
         progressBar.style.width = '0%';
+        if (currentTimeEl) currentTimeEl.textContent = "0:00";
+        if (totalTimeEl) totalTimeEl.textContent = "0:00";
         if (isPlaying) bgAudio.play().catch(() => {});
     }
 
@@ -44,9 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bgAudio.volume = 0.5;
 
+    bgAudio.addEventListener('loadedmetadata', () => {
+        if (totalTimeEl) totalTimeEl.textContent = formatTime(bgAudio.duration);
+    });
+
     bgAudio.addEventListener('timeupdate', () => {
-        if (bgAudio.duration)
+        if (bgAudio.duration) {
             progressBar.style.width = `${(bgAudio.currentTime / bgAudio.duration) * 100}%`;
+            if (currentTimeEl) currentTimeEl.textContent = formatTime(bgAudio.currentTime);
+            if (totalTimeEl) totalTimeEl.textContent = formatTime(bgAudio.duration);
+        }
     });
 
     bgAudio.addEventListener('ended', () => {
@@ -132,20 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
         showMain();
     });
 
-    // ── 3D Card Tilt (Pure CSS transforms) ────────────────────────
-    document.addEventListener('mousemove', (e) => {
-        const cx = window.innerWidth  / 2;
-        const cy = window.innerHeight / 2;
-        const rx =  (e.clientY - cy) / 35;
-        const ry = -(e.clientX - cx) / 35;
-        cardFrame.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        cardFrame.style.transition = 'transform 0.15s linear';
-    });
-
-    document.addEventListener('mouseleave', () => {
-        cardFrame.style.transition = 'transform 0.8s cubic-bezier(0.16,1,0.3,1)';
-        cardFrame.style.transform  = 'rotateX(0deg) rotateY(0deg)';
-    });
+    // ── 3D Card Tilt (Disabled for Flat Brutalist Design) ──────────
+    // document.addEventListener('mousemove', ...);
+    // document.addEventListener('mouseleave', ...);
 
     // ── Social button click micro-animation ───────────────────────
     document.querySelectorAll('.social-btn').forEach(btn => {
@@ -180,4 +187,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 900);
         }
     }, 2500);
+
+    // ── Avatar Popup ────────────────────────────────────────────────
+    const avatarBtn   = document.getElementById('avatar-btn');
+    const avatarPopup = document.getElementById('avatar-popup');
+    const closePopup  = document.getElementById('close-popup');
+    const popupContent= document.getElementById('popup-content');
+
+    if (avatarBtn && avatarPopup && closePopup && popupContent) {
+        avatarBtn.addEventListener('click', () => {
+            avatarPopup.classList.remove('opacity-0', 'pointer-events-none');
+            popupContent.classList.remove('scale-95');
+            popupContent.classList.add('scale-100');
+        });
+
+        function closeAvatarPopup() {
+            avatarPopup.classList.add('opacity-0', 'pointer-events-none');
+            popupContent.classList.remove('scale-100');
+            popupContent.classList.add('scale-95');
+        }
+
+        closePopup.addEventListener('click', closeAvatarPopup);
+
+        avatarPopup.addEventListener('click', (e) => {
+            if (e.target === avatarPopup) {
+                closeAvatarPopup();
+            }
+        });
+    }
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFQI | CREATIVE DEVELOPER</title>
+    <title>RIFQI | Software Engineering Student | Full-Stack Developer</title>
     <meta name="description" content="Crafting digital experiences through minimal code and brutalist design.">
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="RIFQI | PORTFOLIO">
@@ -71,7 +71,7 @@
 
     <!-- SPLASH SCREEN -->
     <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white px-4">
-        <h1 class="font-serif text-6xl uppercase tracking-tighter mb-12 select-none">RIFQI.</h1>
+        <h1 class="font-serif text-6xl uppercase tracking-tighter mb-12 select-none">RIFQI ARDIAN.</h1>
         <button id="init-btn"
             class="font-mono text-xs uppercase tracking-[0.3em] border border-white px-10 py-4 
                    hover:bg-white hover:text-black transition-colors duration-300">
@@ -80,26 +80,23 @@
     </div>
 
     <!-- MAIN DASHBOARD (Mobile Portrait Locked) -->
-    <main id="main-content" class="relative z-30 w-full max-w-[420px] mx-auto min-h-screen py-8 px-4 flex flex-col justify-center opacity-0 perspective-[2000px]">
+    <main id="main-content" class="relative z-30 w-full max-w-[420px] mx-auto min-h-screen py-12 px-4 flex flex-col opacity-0">
         
         <!-- Grid Frame -->
         <div id="card-frame" class="w-full bg-white grid grid-cols-1 gap-[1px] border border-white shadow-[0_0_30px_rgba(255,255,255,0.05)]">
             
             <!-- HEADER -->
             <div class="bg-black p-8">
-                <div class="font-mono text-[10px] uppercase tracking-[0.2em] flex justify-between opacity-50 mb-10">
-                    <span>Portfolio</span>
-                    <span>2026</span>
-                </div>
+               
                 <h1 class="font-serif text-6xl md:text-[5rem] uppercase leading-none tracking-tighter mb-4 hover:outline-text transition-all duration-500">RIFQI.</h1>
-                <p class="font-mono text-xs font-light uppercase tracking-[0.2em]">Creative Developer</p>
+                <p class="font-mono text-xs font-light uppercase tracking-[0.2em]">Software Engineering Student | Full-Stack Developer</p>
             </div>
 
             <!-- AVATAR -->
-            <div class="bg-black relative group overflow-hidden h-[300px]">
+            <div id="avatar-btn" class="bg-black relative group overflow-hidden h-[300px] cursor-pointer">
                 <img src="2.png" alt="Rifqi" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105">
                 <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-                    <span class="font-mono text-[10px] uppercase tracking-widest border border-white px-4 py-2 bg-black/50 backdrop-blur-sm">PROFILE</span>
+                    <span class="font-mono text-[10px] uppercase tracking-widest border border-white px-4 py-2 bg-black/50 backdrop-blur-sm text-white">VIEW PROFILE</span>
                 </div>
             </div>
 
@@ -122,12 +119,16 @@
                 <div class="h-[2px] bg-white/20 w-full cursor-pointer relative" id="progress-bar-container">
                     <div class="absolute left-0 top-0 h-full bg-white progress-fill" id="progress" style="width: 0%;"></div>
                 </div>
+                <div class="flex justify-between font-mono text-[9px] uppercase tracking-widest opacity-50 mt-3">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
             </div>
 
             <!-- BIO -->
             <div class="bg-white text-black p-8">
                 <p class="font-sans text-[15px] leading-relaxed font-medium mb-8">
-                    Crafting digital experiences through minimal code and brutalist design.
+                    Full-stack developer in progress. Saya senang mengerjakan proyek web dari awal sampai akhir, mulai dari desain antarmuka hingga sistem di baliknya, dengan fokus pada pengalaman pengguna yang baik. Saya juga open jasa, jadi kalau kamu punya proyek yang ingin diwujudkan, jangan ragu untuk menghubungi saya!
                 </p>
                 <div class="flex justify-between items-end border-t border-black/20 pt-4">
                     <p class="font-mono text-[9px] uppercase tracking-widest">Location</p>
@@ -165,6 +166,29 @@
 
         </div>
     </main>
+
+    <!-- AVATAR POPUP -->
+    <div id="avatar-popup" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+        <div class="bg-white text-black w-full max-w-[360px] border border-white relative shadow-2xl transform scale-95 transition-transform duration-300" id="popup-content">
+            <button id="close-popup" class="absolute top-0 right-0 w-12 h-12 flex items-center justify-center bg-black text-white hover:bg-white hover:text-black border-l border-b border-black transition-colors z-10">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-6 pt-12">
+                <img src="2.png" alt="Rifqi" class="w-full aspect-square object-cover grayscale mb-6 border border-black">
+                <h2 class="font-serif text-3xl uppercase tracking-tighter mb-1">Rifqi Ardian</h2>
+                <p class="font-mono text-[10px] uppercase tracking-[0.2em] opacity-60 mb-6">Full-Stack Developer</p>
+                <div class="font-sans text-xs leading-relaxed font-medium border-t border-black/20 pt-4">
+                    <p class="mb-3">Siswa Rekayasa Perangkat Lunak (Software Engineering Student).</p>
+                    <p>Terbuka untuk kolaborasi atau jasa pembuatan website, dari desain antarmuka hingga pengembangan sistem backend.</p>
+                </div>
+                <div class="mt-6">
+                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="block w-full bg-black text-white text-center py-4 font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-black border border-black transition-colors duration-300">
+                        HIRE ME / CONTACT
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <audio id="bg-audio" loop></audio>
 

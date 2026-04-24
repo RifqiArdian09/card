@@ -4,107 +4,321 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIFQI | VANGUARD_OS</title>
-    <meta name="description" content="VANGUARD_OS // Digital Architect Profile">
+    <meta name="description" content="Digital Architect — Building the future of code.">
     <meta name="theme-color" content="#00f2ff">
-    <meta property="og:title" content="RIFQI | VANGUARD_OS">
-    <meta property="og:description" content="Accessing Digital Architect Profile... [STATUS: OPERATIONAL]">
-    <meta property="og:image" content="public/2.png">
+    <meta property="og:title" content="rifqi | digital architect">
+    <meta property="og:description" content="Synthesizing virtual realities and building the future of code.">
+    <meta property="og:image" content="2.png">
     <meta property="og:type" content="website">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-cyan': '#00f2ff',
+                        'neon-magenta': '#ff00ff',
+                        'neon-lime': '#39ff14',
+                        'void': '#020204',
+                        'glass': 'rgba(10, 10, 20, 0.6)',
+                    },
+                    fontFamily: {
+                        'outfit': ['Outfit', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-neon': 'pulseNeon 2s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'scan': 'scanline 5s linear infinite',
+                        'mesh': 'meshMove 60s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseNeon: {
+                            '0%, 100%': { boxShadow: '0 0 5px #00f2ff, 0 0 15px #00f2ff' },
+                            '50%': { boxShadow: '0 0 20px #00f2ff, 0 0 50px #00f2ff, 0 0 100px #00f2ff' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        scanline: {
+                            '0%': { top: '-100%' },
+                            '100%': { top: '200%' },
+                        },
+                        meshMove: {
+                            '0%, 100%': { transform: 'scale(1) rotate(0deg)' },
+                            '50%': { transform: 'scale(1.05) rotate(2deg)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
+
+    <style>
+        * { cursor: crosshair; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; }
+
+        /* Mesh background */
+        .mesh-bg {
+            background-image:
+                linear-gradient(rgba(0,242,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.04) 1px, transparent 1px),
+                radial-gradient(rgba(0,242,255,0.07) 1.5px, transparent 1.5px);
+            background-size: 60px 60px, 60px 60px, 30px 30px;
+            animation: meshMove 60s ease-in-out infinite;
+        }
+
+        /* Scanline effect on card */
+        .card-scan::before {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, rgba(0,242,255,0.04), transparent);
+            animation: scanline 5s linear infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Avatar ring */
+        .avatar-ring::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border: 1.5px dashed rgba(0,242,255,0.6);
+            border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+
+        /* Glow text */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0,242,255,0.5), 0 0 30px rgba(0,242,255,0.2);
+        }
+
+        /* Social button hover */
+        .social-btn {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .social-btn:hover {
+            background: #00f2ff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0,242,255,0.6);
+            transform: translateY(-6px) rotate(8deg);
+        }
+
+        /* Corner brackets */
+        .corner-tl { border-top: 2px solid #00f2ff; border-left: 2px solid #00f2ff; }
+        .corner-tr { border-top: 2px solid #00f2ff; border-right: 2px solid #00f2ff; }
+        .corner-bl { border-bottom: 2px solid #00f2ff; border-left: 2px solid #00f2ff; }
+        .corner-br { border-bottom: 2px solid #00f2ff; border-right: 2px solid #00f2ff; }
+
+        /* Progress bar */
+        .progress-fill {
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px #00f2ff;
+        }
+
+        /* Vinyl spin */
+        .vinyl-spin { animation: spin 6s linear infinite; animation-play-state: paused; }
+        .vinyl-spin.playing { animation-play-state: running; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes scanline { 0% { top: -100%; } 100% { top: 200%; } }
+        @keyframes meshMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(1.5deg); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Splash */
+        #splash { transition: opacity 0.8s ease; }
+        #splash.hidden { opacity: 0; pointer-events: none; }
+
+        /* HUD blink */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .hud-blink { animation: blink 1.5s ease-in-out infinite; }
+    </style>
 </head>
-<body class="loading">
-    <div id="splash-screen">
-        <div class="terminal-loader">
-            <div class="loader-text">[VANGUARD_OS_V2.0]</div>
-            <div class="loader-status">INITIALIZING_SYSTEM...</div>
-            <button id="init-btn">INITIATE_SESSION</button>
+
+<body class="bg-void text-white h-screen flex items-center justify-center relative">
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="fixed inset-0 z-0">
+        <!-- Deep void -->
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, #05050f 0%, #000 100%);"></div>
+        <!-- Nebula glow -->
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 25% 25%, rgba(0,242,255,0.04) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,0,255,0.04) 0%, transparent 50%); animation: meshMove 30s ease-in-out infinite alternate;"></div>
+        <!-- Digital mesh -->
+        <div class="absolute inset-0 mesh-bg opacity-60"></div>
+        <!-- Vignette -->
+        <div class="absolute inset-0" style="background: radial-gradient(circle at center, transparent 25%, rgba(0,0,0,0.85) 100%);"></div>
+        <!-- Scanlines -->
+        <div class="absolute inset-0" style="background: repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 4px); pointer-events:none;"></div>
+    </div>
+
+    <!-- ===== HUD LAYER ===== -->
+    <div class="fixed inset-0 z-20 pointer-events-none p-7 font-mono">
+        <!-- Top Left -->
+        <div class="absolute top-7 left-7 border-l-2 border-neon-cyan pl-3">
+            <div class="text-[9px] opacity-40 tracking-widest mb-1">SYSTEM_STATUS</div>
+            <div class="text-sm font-semibold tracking-wider text-neon-cyan hud-blink" id="hud-status" style="text-shadow:0 0 10px #00f2ff">OPERATIONAL</div>
+        </div>
+        <!-- Top Right -->
+        <div class="absolute top-7 right-7 border-r-2 border-neon-cyan pr-3 text-right">
+            <div class="text-[9px] opacity-40 tracking-widest mb-1">LOCATION</div>
+            <div class="text-xs font-semibold tracking-wider">SECTOR_7G // IDN</div>
+        </div>
+        <!-- Bottom Left -->
+        <div class="absolute bottom-7 left-7 w-40">
+            <div class="text-[9px] opacity-40 tracking-widest mb-2">CORE_LOAD</div>
+            <div class="h-[3px] bg-white/10 rounded overflow-hidden">
+                <div class="h-full bg-neon-cyan rounded" id="hud-load" style="width:42%; box-shadow: 0 0 8px #00f2ff; transition: width 1.5s ease;"></div>
+            </div>
+        </div>
+        <!-- Vertical text -->
+        <div class="absolute right-[-55px] top-1/2 -translate-y-1/2 text-[9px] tracking-[6px] opacity-20" style="transform: translateY(-50%) rotate(90deg);">ACCESS_GRANTED_BY_VANGUARD_OS</div>
+    </div>
+
+    <!-- ===== SPLASH SCREEN ===== -->
+    <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black font-mono">
+        <div class="text-center px-10">
+            <div class="text-neon-cyan text-2xl font-bold tracking-[6px] mb-2" style="text-shadow:0 0 20px #00f2ff;">[VANGUARD_OS_V2.0]</div>
+            <div class="text-xs opacity-40 tracking-[3px] mb-10">INITIALIZING_DIGITAL_ARCHITECT...</div>
+            <button id="init-btn"
+                class="border border-neon-cyan text-neon-cyan px-8 py-3 text-sm tracking-widest font-mono
+                       hover:bg-neon-cyan hover:text-black transition-all duration-300"
+                style="box-shadow: 0 0 15px rgba(0,242,255,0.2);">
+                INITIATE_SESSION
+            </button>
         </div>
     </div>
 
-    <div class="background-container">
-        <div class="void-bg"></div>
-        <div class="nebula"></div>
-        <div class="digital-mesh"></div>
-        <div class="vignette"></div>
-        <div class="scanlines"></div>
-    </div>
+    <!-- ===== MAIN PROFILE CARD ===== -->
+    <main id="main-content" class="relative z-30 opacity-0" style="perspective: 2000px;">
+        <!-- Frame brackets -->
+        <div class="relative p-3" id="card-frame">
+            <div class="corner-tl absolute top-0 left-0 w-8 h-8"></div>
+            <div class="corner-tr absolute top-0 right-0 w-8 h-8"></div>
+            <div class="corner-bl absolute bottom-0 left-0 w-8 h-8"></div>
+            <div class="corner-br absolute bottom-0 right-0 w-8 h-8"></div>
 
-    <!-- HUD Elements -->
-    <div class="hud-layer">
-        <div class="hud-corner top-left">
-            <span class="hud-label">SYSTEM_STATUS</span>
-            <span class="hud-value neon-text">OPERATIONAL</span>
-        </div>
-        <div class="hud-corner top-right">
-            <span class="hud-label">LOCATION</span>
-            <span class="hud-value">SECTOR_7G // IDN</span>
-        </div>
-        <div class="hud-corner bottom-left">
-            <span class="hud-label">CORE_LOAD</span>
-            <div class="hud-bar"><div class="hud-bar-fill" style="width: 42%;"></div></div>
-        </div>
-        <div class="hud-side-text">ACCESS_GRANTED_BY_VANGUARD_OS</div>
-    </div>
+            <!-- Glass Card -->
+            <div id="profile-card"
+                class="relative w-[360px] card-scan overflow-hidden"
+                style="background: rgba(8,8,16,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 40px 80px rgba(0,0,0,0.8);">
 
-    <main class="profile-wrapper">
-        <div class="card-frame">
-            <div class="frame-corner tl"></div>
-            <div class="frame-corner tr"></div>
-            <div class="frame-corner bl"></div>
-            <div class="frame-corner br"></div>
-            
-            <div class="profile-card">
-                <div class="glitch-overlay"></div>
-                
-                <div class="avatar-section">
-                    <div class="avatar-orb">
-                        <div class="orb-ring"></div>
-                        <img src="public/2.png" alt="Avatar" class="avatar">
+                <!-- Top accent line -->
+                <div class="h-[2px] w-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50"></div>
+
+                <div class="px-10 py-12 flex flex-col items-center gap-0">
+
+                    <!-- Avatar -->
+                    <div class="relative mb-7 avatar-ring" id="avatar-wrap" style="animation: float 6s ease-in-out infinite;">
+                        <img src="2.png" alt="rifqi"
+                            class="w-28 h-28 rounded-full object-cover"
+                            style="border: 3px solid #000; box-shadow: 0 0 25px rgba(0,242,255,0.25);">
                     </div>
+
+                    <!-- Name -->
+                    <h1 class="font-outfit font-black text-4xl tracking-tighter mb-1 glow-text"
+                        style="background: linear-gradient(to bottom, #fff 40%, #666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        rifqi
+                    </h1>
+
+                    <!-- Tag -->
+                    <div class="font-mono text-[11px] tracking-[3px] text-neon-magenta mb-4 px-3 py-1"
+                         style="background: rgba(255,0,255,0.08); border: 1px solid rgba(255,0,255,0.15);">
+                        DIGITAL_ARCHITECT
+                    </div>
+
+                    <!-- Bio -->
+                    <p class="text-sm text-white/50 text-center leading-relaxed mb-8">
+                        Synthesizing virtual realities<br>and building the future of code.
+                    </p>
+
+                    <!-- Social Buttons -->
+                    <div class="flex gap-3" id="social-links">
+                        <a href="https://github.com/RifqiArdian09" target="_blank"
+                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
+                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank"
+                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
+                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.instagram.com/rifqiard._/" target="_blank"
+                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
+                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://rifqiardian.my.id/" target="_blank"
+                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
+                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                        <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank"
+                           class="social-btn w-11 h-11 flex items-center justify-center text-base text-white/80"
+                           style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+
                 </div>
 
-                <div class="info-section">
-                    <h1 class="name-text" data-text="rifqi">rifqi</h1>
-                    <div class="bio-tag">DIGITAL_ARCHITECT</div>
-                    <p class="bio-desc">Synthesizing virtual realities and building the future of code.</p>
-                </div>
-
-                <div class="social-grid">
-                    <a href="https://github.com/RifqiArdian09" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
-                    <a href="https://rifqiardian.my.id/" target="_blank" class="social-btn"><i class="fas fa-globe"></i></a>
-                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="social-btn"><i class="fab fa-whatsapp"></i></a>
-                </div>
+                <!-- Bottom accent line -->
+                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
             </div>
         </div>
     </main>
 
-    <audio id="bg-audio" loop>
-        <source src="sound/Midnight.mp3" type="audio/mpeg">
-    </audio>
+    <!-- ===== FLOATING MUSIC PLAYER ===== -->
+    <div id="player"
+         class="fixed bottom-8 right-8 z-40 opacity-0"
+         style="background: rgba(8,8,16,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(0,242,255,0.2); padding: 12px 18px; min-width: 280px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
 
-    <div class="vanguard-player">
-        <div class="player-inner">
-            <div class="vinyl-container">
-                <i class="fas fa-record-vinyl vinyl-icon"></i>
+        <div class="flex items-center gap-4">
+            <!-- Vinyl icon -->
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                 style="border: 1px solid rgba(0,242,255,0.4); background: #000;">
+                <i class="fas fa-record-vinyl text-xl text-neon-cyan vinyl-spin" id="vinyl-icon" style="text-shadow: 0 0 10px #00f2ff;"></i>
             </div>
-            <div class="track-meta">
-                <span class="track-title">Midnight</span>
-                <div class="v-progress-bg" id="progress-bar-container">
-                    <div class="v-progress-fill" id="progress"></div>
+
+            <!-- Track info -->
+            <div class="flex-1 min-w-0">
+                <span class="block text-[13px] font-semibold font-mono tracking-wide truncate text-white" id="track-title">MIDNIGHT</span>
+                <div class="h-[2px] bg-white/10 rounded mt-2 cursor-pointer" id="progress-bar-container">
+                    <div class="h-full bg-neon-cyan rounded progress-fill" id="progress" style="width: 0%;"></div>
                 </div>
             </div>
-            <div class="v-controls">
-                <i class="fas fa-step-backward" id="prev-btn"></i>
-                <i class="fas fa-play" id="play-pause-btn"></i>
-                <i class="fas fa-step-forward" id="next-btn"></i>
+
+            <!-- Controls -->
+            <div class="flex items-center gap-3 text-sm text-white/70 flex-shrink-0">
+                <i class="fas fa-step-backward cursor-pointer hover:text-neon-cyan transition-colors" id="prev-btn"></i>
+                <i class="fas fa-play cursor-pointer hover:text-neon-cyan transition-colors text-neon-cyan" id="play-pause-btn" style="text-shadow: 0 0 8px #00f2ff;"></i>
+                <i class="fas fa-step-forward cursor-pointer hover:text-neon-cyan transition-colors" id="next-btn"></i>
             </div>
         </div>
     </div>
 
+    <audio id="bg-audio" loop></audio>
+
+    <!-- Motion.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@11/dist/motion.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

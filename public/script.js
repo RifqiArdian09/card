@@ -1,175 +1,170 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const card = document.querySelector('.card-frame');
-    const nebula = document.querySelector('.nebula');
-    const grid = document.querySelector('.grid-system');
-    const body = document.body;
+    const { animate, stagger, inView, scroll } = Motion;
 
-    // --- Interactive Parallax & Tilt ---
-    document.addEventListener('mousemove', (e) => {
-        const { clientX, clientY } = e;
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
+    const splash = document.getElementById('splash');
+    const initBtn = document.getElementById('init-btn');
+    const mainContent = document.getElementById('main-content');
+    const player = document.getElementById('player');
+    const cardFrame = document.getElementById('card-frame');
+    const profileCard = document.getElementById('profile-card');
 
-        // Card Tilt
-        const rotateX = (clientY - centerY) / 40;
-        const rotateY = (centerX - clientX) / 40;
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-        // Background Parallax
-        const moveX = (clientX - centerX) / 100;
-        const moveY = (clientY - centerY) / 100;
-        nebula.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
-        grid.style.transform = `translate(${moveX * 0.5}px, ${moveY * 0.5}px)`;
-
-        // HUD Glitch Effect (Random)
-        if (Math.random() > 0.98) {
-            body.style.filter = 'hue-rotate(90deg) contrast(1.2)';
-            setTimeout(() => body.style.filter = 'none', 50);
-        }
-    });
-
-    document.addEventListener('mouseleave', () => {
-        card.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-    });
-
-    document.addEventListener('mouseenter', () => {
-        card.style.transition = 'none';
-    });
-
-    // --- Music Player Logic ---
+    // ── Audio ────────────────────────────────────────────
+    const bgAudio = document.getElementById('bg-audio');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-    const vinylIcon = document.querySelector('.vinyl-icon');
-    const bgAudio = document.getElementById('bg-audio');
+    const vinylIcon = document.getElementById('vinyl-icon');
     const progressBar = document.getElementById('progress');
     const progressContainer = document.getElementById('progress-bar-container');
-    const songTitleDisplay = document.querySelector('.track-title');
-    
+    const songTitle = document.getElementById('track-title');
+
     const playlist = [
-        { title: "VANGUARD // MIDNIGHT", src: "sound/Midnight.mp3" },
-        { title: "VANGUARD // LET_HIM_COOK", src: "sound/Let_Him_Cook.mp3" }
+        { title: 'MIDNIGHT', src: 'sound/Midnight.mp3' },
+        { title: 'LET_HIM_COOK', src: 'sound/Let_Him_Cook.mp3' }
     ];
-    let currentTrackIndex = 0;
+    let currentTrack = 0;
     let isPlaying = false;
 
     function loadTrack(index) {
         const track = playlist[index];
         bgAudio.src = track.src;
-        songTitleDisplay.textContent = track.title;
+        songTitle.textContent = track.title;
         progressBar.style.width = '0%';
-        
         if (isPlaying) {
-            const playPromise = bgAudio.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    isPlaying = false;
-                    updateUI();
-                });
-            }
+            bgAudio.play().catch(() => {});
         }
-        updateUI();
     }
 
-    function updateUI() {
-        if (isPlaying) {
+    function setPlayState(playing) {
+        isPlaying = playing;
+        if (playing) {
             playPauseBtn.classList.replace('fa-play', 'fa-pause');
-            vinylIcon.style.animationPlayState = 'running';
+            vinylIcon.classList.add('playing');
+            // Glow pulse on vinyl when playing
+            animate(vinylIcon, { textShadow: ['0 0 5px #00f2ff', '0 0 25px #00f2ff', '0 0 5px #00f2ff'] }, { duration: 2, repeat: Infinity });
         } else {
             playPauseBtn.classList.replace('fa-pause', 'fa-play');
-            vinylIcon.style.animationPlayState = 'paused';
+            vinylIcon.classList.remove('playing');
         }
     }
 
-    if (bgAudio) {
-        bgAudio.volume = 0.5;
-        loadTrack(currentTrackIndex);
-        
-        // --- INITIATION LOGIC (Autoplay Solution) ---
-        const initBtn = document.getElementById('init-btn');
-        const splash = document.getElementById('splash-screen');
-
-        initBtn.addEventListener('click', () => {
-            bgAudio.play().then(() => {
-                isPlaying = true;
-                updateUI();
-                
-                // Transition UI
-                splash.classList.add('fade-out');
-                document.body.classList.remove('loading');
-                
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 800);
-            }).catch(err => {
-                console.error("Audio playback failed:", err);
-                // Force entry even if audio fails
-                splash.classList.add('fade-out');
-                document.body.classList.remove('loading');
-            });
-        });
-
-        bgAudio.addEventListener('timeupdate', () => {
-            if (bgAudio.duration) {
-                const percent = (bgAudio.currentTime / bgAudio.duration) * 100;
-                progressBar.style.width = `${percent}%`;
-            }
-        });
-
-        bgAudio.addEventListener('ended', () => {
-            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-            loadTrack(currentTrackIndex);
-        });
-
-        progressContainer.addEventListener('click', (e) => {
-            const width = progressContainer.clientWidth;
-            const clickX = e.offsetX;
-            bgAudio.currentTime = (clickX / width) * bgAudio.duration;
-        });
-    }
+    bgAudio.volume = 0.5;
+    bgAudio.addEventListener('timeupdate', () => {
+        if (bgAudio.duration) {
+            progressBar.style.width = `${(bgAudio.currentTime / bgAudio.duration) * 100}%`;
+        }
+    });
+    bgAudio.addEventListener('ended', () => {
+        currentTrack = (currentTrack + 1) % playlist.length;
+        loadTrack(currentTrack);
+    });
+    progressContainer.addEventListener('click', (e) => {
+        if (bgAudio.duration) {
+            bgAudio.currentTime = (e.offsetX / progressContainer.clientWidth) * bgAudio.duration;
+        }
+    });
 
     playPauseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (isPlaying) {
-            bgAudio.pause();
-        } else {
-            bgAudio.play();
-        }
-        isPlaying = !isPlaying;
-        updateUI();
+        if (isPlaying) { bgAudio.pause(); setPlayState(false); }
+        else { bgAudio.play().then(() => setPlayState(true)).catch(() => {}); }
     });
-
     nextBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        loadTrack(currentTrackIndex);
+        currentTrack = (currentTrack + 1) % playlist.length;
+        loadTrack(currentTrack);
     });
-
     prevBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-        loadTrack(currentTrackIndex);
+        currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrack);
     });
 
-    // --- Dynamic HUD Load Animation ---
-    const loadFill = document.querySelector('.hud-bar-fill');
-    const statusValue = document.querySelector('.hud-corner.top-left .hud-value');
-    
-    setInterval(() => {
-        const load = 30 + Math.floor(Math.random() * 20);
-        if (loadFill) loadFill.style.width = `${load}%`;
-        
-        // Random "Error" status for aesthetic
-        if (statusValue && Math.random() > 0.95) {
-            const original = statusValue.textContent;
-            statusValue.textContent = "404: NOT_FOUND";
-            statusValue.style.color = "var(--neon-magenta)";
-            setTimeout(() => {
-                statusValue.textContent = original;
-                statusValue.style.color = "var(--neon-cyan)";
-            }, 1000);
-        }
-    }, 2000);
+    // ── Initiation / Splash ──────────────────────────────
+    initBtn.addEventListener('click', () => {
+        // Start audio
+        loadTrack(currentTrack);
+        bgAudio.play().then(() => setPlayState(true)).catch(() => {});
 
+        // Animate button then hide splash
+        animate(initBtn, { scale: [1, 1.05, 0.95, 1] }, { duration: 0.4 }).then(() => {
+            animate(splash, { opacity: 0 }, { duration: 0.8 }).then(() => {
+                splash.style.display = 'none';
+            });
+
+            // ── Entrance Animations (Motion.js) ──────────
+            // Main content fade in + rise
+            animate(mainContent, { opacity: [0, 1], y: [40, 0] }, { duration: 0.8, easing: [0.16, 1, 0.3, 1] });
+
+            // Player slide in from bottom-right
+            animate(player, { opacity: [0, 1], y: [30, 0], x: [20, 0] }, { duration: 0.8, delay: 0.3, easing: [0.16, 1, 0.3, 1] });
+
+            // Stagger social buttons
+            const socialBtns = document.querySelectorAll('.social-btn');
+            animate(socialBtns, { opacity: [0, 1], y: [20, 0], scale: [0.8, 1] }, {
+                delay: stagger(0.08, { start: 0.6 }),
+                duration: 0.5,
+                easing: [0.34, 1.56, 0.64, 1]
+            });
+
+            // Avatar pop in
+            const avatarWrap = document.getElementById('avatar-wrap');
+            animate(avatarWrap, { scale: [0.5, 1.1, 1], opacity: [0, 1] }, { duration: 0.7, delay: 0.4, easing: [0.34, 1.56, 0.64, 1] });
+
+            // Name and bio fade in
+            animate('h1', { opacity: [0, 1], y: [15, 0] }, { duration: 0.6, delay: 0.55 });
+            animate('.font-mono', { opacity: [0, 1], x: [-10, 0] }, { duration: 0.5, delay: 0.65 });
+        });
+    });
+
+    // ── 3D Card Tilt (Mouse Parallax) ────────────────────
+    const card = document.getElementById('profile-card');
+    let tiltX = 0, tiltY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+
+        // Smooth tilt with Motion
+        tiltX = (e.clientY - cy) / 35;
+        tiltY = (cx - e.clientX) / 35;
+
+        animate(cardFrame, {
+            rotateX: tiltX,
+            rotateY: tiltY,
+        }, { duration: 0.4, easing: 'ease-out' });
+    });
+
+    document.addEventListener('mouseleave', () => {
+        animate(cardFrame, { rotateX: 0, rotateY: 0 }, { duration: 0.8, easing: [0.16, 1, 0.3, 1] });
+    });
+
+    // ── Social button click ripple ────────────────────────
+    document.querySelectorAll('.social-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            animate(btn, { scale: [1, 0.85, 1.1, 1] }, { duration: 0.4, easing: [0.34, 1.56, 0.64, 1] });
+        });
+    });
+
+    // ── HUD dynamics ─────────────────────────────────────
+    const hudLoad = document.getElementById('hud-load');
+    const hudStatus = document.getElementById('hud-status');
+
+    setInterval(() => {
+        const load = 30 + Math.floor(Math.random() * 25);
+        hudLoad.style.width = `${load}%`;
+
+        // Rare glitch effect
+        if (Math.random() > 0.93) {
+            const original = hudStatus.textContent;
+            hudStatus.textContent = '404: ERR_DETECTED';
+            hudStatus.style.color = '#ff00ff';
+            hudStatus.style.textShadow = '0 0 10px #ff00ff';
+            setTimeout(() => {
+                hudStatus.textContent = original;
+                hudStatus.style.color = '';
+                hudStatus.style.textShadow = '0 0 10px #00f2ff';
+            }, 900);
+        }
+    }, 2500);
 });

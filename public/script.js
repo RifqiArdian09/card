@@ -138,13 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.style.transform = 'translateY(0) scale(1)';
             }, 20);
         });
-        // Show Hire Alert after a delay (only after entering)
-        const hireAlert = document.getElementById('hire-alert');
-        if (hireAlert) {
-            setTimeout(() => {
-                hireAlert.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-            }, 3000);
-        }
+
     }
 
     initBtn.addEventListener('click', () => {
@@ -223,18 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Hire Alert ──────────────────────────────────────────────────
-    const closeAlert = document.getElementById('close-alert');
 
-    if (closeAlert) {
-        closeAlert.addEventListener('click', () => {
-            const hireAlert = document.getElementById('hire-alert');
-            if (hireAlert) {
-                hireAlert.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-                setTimeout(() => { hireAlert.remove(); }, 700);
-            }
-        });
-    }
 
     // ── Card Flip (Projects) ────────────────────────────────────────
     const flipInner = document.getElementById('flip-inner');

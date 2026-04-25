@@ -49,10 +49,8 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             background-color: #000;
-            background-image: repeating-linear-gradient(
-                45deg, transparent, transparent 18px,
-                rgba(255,255,255,0.06) 18px, rgba(255,255,255,0.06) 19px
-            );
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 18px,
+                    rgba(255, 255, 255, 0.025) 18px, rgba(255, 255, 255, 0.025) 19px);
             color: #fff;
         }
 
@@ -362,26 +360,7 @@
 
     <audio id="bg-audio"></audio>
 
-    <!-- BOTTOM RIGHT ALERT -->
-    <div id="hire-alert"
-        class="fixed bottom-4 right-4 z-50 max-w-[240px] sm:max-w-[320px] bg-black border border-white p-3 sm:p-4 shadow-[4px_4px_0px_rgba(255,255,255,1)] sm:shadow-[8px_8px_0px_rgba(255,255,255,1)] transform translate-y-10 opacity-0 pointer-events-none transition-all duration-700">
-        <button id="close-alert"
-            class="absolute -top-2.5 -right-2.5 bg-white text-black w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center border border-black hover:bg-black hover:text-white hover:border-white transition-colors z-10 pointer-events-auto">
-            <i class="fas fa-times text-[10px] sm:text-xs"></i>
-        </button>
-        <div class="flex items-start gap-2 sm:gap-3 relative z-0 pointer-events-auto">
-            <div class="mt-1">
-                <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
-            </div>
-            <div>
-                <p class="font-sans text-[10px] sm:text-[11px] leading-relaxed text-white">Saya juga open jasa, silakan hubungi saya jika ada proyek yang ingin diwujudkan!</p>
-                <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank"
-                    class="inline-block mt-2 sm:mt-3 font-mono text-[8px] sm:text-[9px] font-bold uppercase tracking-widest border border-white px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-white hover:text-black transition-colors duration-300">
-                    HIRE ME
-                </a>
-            </div>
-        </div>
-    </div>
+
 
     <!-- LIGHTBOX POPUP -->
     <div id="lightbox-popup"

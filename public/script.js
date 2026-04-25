@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const playlist = [
-        { title: 'MIDNIGHT',      src: 'sound/Midnight.mp3'      },
-        { title: 'LET_HIM_COOK',  src: 'sound/Let_Him_Cook.mp3'  }
+        { title: 'LET HIM COOK',  src: 'sound/Let_Him_Cook.mp3'  },
+        { title: 'MIDNIGHT',      src: 'sound/Midnight.mp3'      }
     ];
     let currentTrack = 0;
     let isPlaying    = false;
@@ -213,6 +213,90 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === avatarPopup) {
                 closeAvatarPopup();
             }
+        });
+    }
+
+    // ── Hire Alert ──────────────────────────────────────────────────
+    const hireAlert = document.getElementById('hire-alert');
+    const closeAlert = document.getElementById('close-alert');
+
+    if (hireAlert && closeAlert) {
+        // Show after a delay
+        setTimeout(() => {
+            hireAlert.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+        }, 1500); 
+
+        closeAlert.addEventListener('click', () => {
+            hireAlert.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+            setTimeout(() => { hireAlert.remove(); }, 700);
+        });
+    }
+
+    // ── Card Flip (Projects) ────────────────────────────────────────
+    const flipInner = document.getElementById('flip-inner');
+    const btnFlipFront = document.getElementById('flip-btn-front');
+    const btnFlipBack = document.getElementById('flip-btn-back');
+    const cardFront = document.getElementById('card-front');
+    const cardBack = document.getElementById('card-back');
+
+    if (flipInner && btnFlipFront && btnFlipBack && cardFront && cardBack) {
+        btnFlipFront.addEventListener('click', () => {
+            flipInner.style.transform = 'rotateY(180deg)';
+            // After halfway through the flip, swap pointer events
+            setTimeout(() => {
+                cardFront.style.pointerEvents = 'none';
+                cardBack.style.pointerEvents = 'auto';
+                cardBack.style.zIndex = '20';
+                cardFront.style.zIndex = '1';
+            }, 350);
+        });
+
+        btnFlipBack.addEventListener('click', () => {
+            flipInner.style.transform = 'rotateY(0deg)';
+            setTimeout(() => {
+                cardFront.style.pointerEvents = 'auto';
+                cardBack.style.pointerEvents = 'none';
+                cardBack.style.zIndex = '1';
+                cardFront.style.zIndex = '20';
+            }, 350);
+        });
+    }
+
+    // ── Lightbox (Project Images) ──────────────────────────────────
+    const lightboxPopup = document.getElementById('lightbox-popup');
+    const lightboxImg   = document.getElementById('lightbox-img');
+    const closeLightbox = document.getElementById('close-lightbox');
+    const zoomableImgs  = document.querySelectorAll('.zoomable-img');
+
+    if (lightboxPopup && lightboxImg && closeLightbox) {
+        zoomableImgs.forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxPopup.classList.remove('opacity-0', 'pointer-events-none');
+                lightboxImg.classList.remove('scale-90');
+                lightboxImg.classList.add('scale-100');
+            });
+        });
+
+        function hideLightbox() {
+            lightboxPopup.classList.add('opacity-0', 'pointer-events-none');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-90');
+            setTimeout(() => {
+                lightboxImg.src = '';
+            }, 500);
+        }
+
+        closeLightbox.addEventListener('click', hideLightbox);
+        lightboxPopup.addEventListener('click', (e) => {
+            if (e.target === lightboxPopup || e.target.parentElement === lightboxPopup) {
+                hideLightbox();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideLightbox();
         });
     }
 });

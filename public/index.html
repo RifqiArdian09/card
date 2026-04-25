@@ -11,6 +11,9 @@
     <meta property="og:image" content="2.png">
     <meta property="og:type" content="website">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Cpath fill='%23fff' transform='translate(15, 22) scale(0.11)' d='M128 32C92.7 32 64 60.7 64 96V352h512V96c0-35.3-28.7-64-64-64H128zM19.2 384C8.6 384 0 392.6 0 403.2C0 445.6 34.4 480 76.8 480H563.2c42.4 0 76.8-34.4 76.8-76.8c0-10.6-8.6-19.2-19.2-19.2H19.2z'/%3E%3C/svg%3E">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -51,6 +54,7 @@
         .vinyl-spin.playing { animation-play-state: running; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
 
         /* Splash Screen */
         #splash { transition: opacity 0.8s ease; }
@@ -79,62 +83,37 @@
         </button>
     </div>
 
-    <!-- MAIN DASHBOARD (Mobile Portrait Locked) -->
-    <main id="main-content" class="relative z-30 w-full max-w-[420px] mx-auto min-h-screen py-12 px-4 flex flex-col opacity-0">
+    <!-- MAIN DASHBOARD -->
+    <main id="main-content" class="relative z-30 w-full max-w-[420px] mx-auto min-h-screen py-12 px-4 flex flex-col justify-center opacity-0" style="perspective: 1000px;">
         
-        <!-- Grid Frame -->
-        <div id="card-frame" class="w-full bg-white grid grid-cols-1 gap-[1px] border border-white shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-            
-            <!-- HEADER -->
-            <div class="bg-black p-8">
-               
-                <h1 class="font-serif text-6xl md:text-[5rem] uppercase leading-none tracking-tighter mb-4 hover:outline-text transition-all duration-500">RIFQI.</h1>
-                <p class="font-mono text-xs font-light uppercase tracking-[0.2em]">Software Engineering Student | Full-Stack Developer</p>
+        <!-- FLIP INNER -->
+        <div id="flip-inner" class="relative w-full transition-transform duration-700 ease-in-out" style="transform-style: preserve-3d;">
+
+            <!-- FRONT CARD -->
+            <div id="card-front" class="w-full bg-white grid grid-cols-1 gap-[1px] border border-white shadow-[0_0_30px_rgba(255,255,255,0.05)]" style="backface-visibility: hidden;">
+
+                <!-- HEADER -->
+                <div class="bg-black p-6 md:p-10 flex flex-col justify-end min-h-[140px] relative overflow-hidden group">
+                    <button id="flip-btn-front" class="absolute top-4 right-4 z-20 font-mono text-[8px] uppercase tracking-[0.2em] border border-white/20 px-3 py-1.5 bg-black/50 backdrop-blur-sm text-white hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-2">
+                        PROJECTS <i class="fas fa-undo"></i>
+                    </button>
+                <div class="absolute -right-4 -top-4 opacity-[0.03] font-serif text-[10rem] leading-none tracking-tighter pointer-events-none group-hover:scale-105 group-hover:opacity-10 transition-all duration-1000">R.</div>
+                <h1 class="font-serif text-[4.5rem] md:text-[5.5rem] uppercase leading-none tracking-tighter mb-2 hover:outline-text transition-all duration-500 relative z-10">RIFQI<span class="text-white/20">.</span></h1>
+                <p class="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white relative z-10">Software Engineering Student</p>
+                <p class="font-mono text-[9px] uppercase tracking-[0.2em] mt-1 text-white/50 relative z-10">Full-Stack Developer</p>
             </div>
 
             <!-- AVATAR -->
-            <div id="avatar-btn" class="bg-black relative group overflow-hidden h-[300px] cursor-pointer">
-                <img src="2.png" alt="Rifqi" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-                    <span class="font-mono text-[10px] uppercase tracking-widest border border-white px-4 py-2 bg-black/50 backdrop-blur-sm text-white">VIEW PROFILE</span>
+            <div id="avatar-btn" class="bg-black py-8 flex justify-center items-center group cursor-pointer border-b border-white/10">
+                <div class="w-48 h-48 overflow-hidden relative border border-white/20 rounded-2xl">
+                    <img src="2.png" alt="Rifqi" class="w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-white">VIEW</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- PLAYER -->
-            <div id="player" class="bg-black p-6 flex flex-col justify-center">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <i class="fas fa-record-vinyl text-xl vinyl-spin" id="vinyl-icon"></i>
-                        <div class="min-w-0">
-                            <div class="font-mono text-[9px] uppercase tracking-[0.2em] opacity-50 mb-1">Now Playing</div>
-                            <div id="track-title" class="font-sans font-bold text-sm uppercase tracking-widest truncate w-[110px]">MIDNIGHT</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <i class="fas fa-step-backward text-sm cursor-pointer hover:opacity-50 transition-opacity" id="prev-btn"></i>
-                        <i class="fas fa-play text-xl cursor-pointer hover:opacity-50 transition-opacity" id="play-pause-btn"></i>
-                        <i class="fas fa-step-forward text-sm cursor-pointer hover:opacity-50 transition-opacity" id="next-btn"></i>
-                    </div>
-                </div>
-                <div class="h-[2px] bg-white/20 w-full cursor-pointer relative" id="progress-bar-container">
-                    <div class="absolute left-0 top-0 h-full bg-white progress-fill" id="progress" style="width: 0%;"></div>
-                </div>
-                <div class="flex justify-between font-mono text-[9px] uppercase tracking-widest opacity-50 mt-3">
-                    <span id="current-time">0:00</span>
-                    <span id="total-time">0:00</span>
-                </div>
-            </div>
 
-            <!-- BIO -->
-            <div class="bg-white text-black p-8">
-                <p class="font-sans text-[15px] leading-relaxed font-medium mb-8">
-                    Full-stack developer in progress. Saya senang mengerjakan proyek web dari awal sampai akhir, mulai dari desain antarmuka hingga sistem di baliknya, dengan fokus pada pengalaman pengguna yang baik. Saya juga open jasa, jadi kalau kamu punya proyek yang ingin diwujudkan, jangan ragu untuk menghubungi saya!
-                </p>
-                <div class="flex justify-between items-end border-t border-black/20 pt-4">
-                    <p class="font-mono text-[9px] uppercase tracking-widest">Location</p>
-                    <p class="font-serif text-lg uppercase tracking-tighter">INDONESIA</p>
-                </div>
-            </div>
 
             <!-- LINKS 1 (2 Cols) -->
             <div class="bg-black grid grid-cols-2 gap-[1px]">
@@ -152,19 +131,91 @@
             <div class="bg-black grid grid-cols-3 gap-[1px]">
                 <a href="https://www.instagram.com/rifqiard._/" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
                     <i class="fab fa-instagram text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest">Insta</span>
+                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Insta</span>
                 </a>
                 <a href="https://rifqiardian.my.id/" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
                     <i class="fas fa-globe text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest">Web</span>
+                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Web</span>
                 </a>
                 <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
                     <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest">Chat</span>
+                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Chat</span>
                 </a>
             </div>
 
-        </div>
+            <!-- PLAYER -->
+            <div id="player" class="bg-black p-6 flex flex-col justify-center">
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-4">
+                        <div class="relative w-10 h-10 border border-white/20 rounded-full flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 border-t border-white/40 rounded-full vinyl-spin opacity-50"></div>
+                            <i class="fas fa-record-vinyl text-xl vinyl-spin" id="vinyl-icon"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="font-mono text-[8px] uppercase tracking-[0.3em] opacity-50 mb-1 flex items-center gap-1.5">
+                                <i class="fas fa-volume-up text-[7px]"></i> NOW PLAYING
+                            </div>
+                            <div id="track-title" class="font-sans font-bold text-sm uppercase tracking-widest truncate w-[100px]">MIDNIGHT</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-2.5 rounded-full">
+                        <i class="fas fa-step-backward text-[10px] cursor-pointer hover:text-white/50 transition-colors" id="prev-btn"></i>
+                        <i class="fas fa-play text-sm cursor-pointer hover:text-white/50 transition-colors" id="play-pause-btn"></i>
+                        <i class="fas fa-step-forward text-[10px] cursor-pointer hover:text-white/50 transition-colors" id="next-btn"></i>
+                    </div>
+                </div>
+                <div class="h-[3px] bg-white/10 w-full cursor-pointer relative rounded-full overflow-hidden mb-2" id="progress-bar-container">
+                    <div class="absolute left-0 top-0 h-full bg-white progress-fill rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" id="progress" style="width: 0%;"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[8px] uppercase tracking-[0.2em] opacity-40">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+        </div> <!-- END FRONT CARD -->
+
+        <!-- BACK CARD -->
+        <div id="card-back" class="absolute inset-0 w-full h-full bg-black border border-white text-white overflow-hidden flex flex-col" style="backface-visibility: hidden; transform: rotateY(180deg);">
+            <div class="p-6 md:p-8 flex flex-col h-full overflow-y-auto" style="scrollbar-width: none;">
+                <!-- Top Bar Back -->
+                <div class="flex justify-between items-center mb-8">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] font-bold text-white/50">PROJEK YANG SUDAH DIIMPLEMENTASIKAN</span>
+                    <button id="flip-btn-back" class="font-mono text-[8px] uppercase tracking-[0.2em] border border-white/20 px-3 py-1.5 hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-undo"></i> BACK
+                    </button>
+                </div>
+
+                <!-- Title -->
+                <h2 class="font-serif text-[3.5rem] md:text-[4.5rem] uppercase leading-none tracking-tighter mb-2 text-white">W-VOTE</h2>
+                <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 mb-8 font-bold">E-Voting Platform</p>
+
+                <!-- Desc -->
+                <p class="font-sans text-[11px] leading-relaxed text-white/80 mb-8 border-l border-white/30 pl-4 relative">
+                    <span class="absolute -left-1 top-1 text-white/20"><i class="fas fa-quote-left text-[8px]"></i></span>
+                    Platform pemungutan suara elektronik (E-Voting) yang dirancang untuk mentransformasi proses pemilihan konvensional menjadi digital yang lebih aman, efisien, dan transparan.
+                </p>
+
+                <!-- Implemented -->
+                <div class="bg-white/5 border border-white/10 p-5 mb-8">
+                    <p class="font-mono text-[8px] uppercase tracking-widest text-white/40 mb-3"><i class="fas fa-building mr-1"></i> IMPLEMENTED AT</p>
+                    <ul class="font-sans text-[10px] font-bold space-y-2 uppercase tracking-wide text-white/80">
+                        <li class="flex items-center"><div class="w-1.5 h-1.5 bg-green-500 rounded-full mr-3 shadow-[0_0_5px_#22c55e]"></div> SMKN 1 KOTA BENGKULU</li>
+                        <li class="flex items-center"><div class="w-1.5 h-1.5 bg-green-500 rounded-full mr-3 shadow-[0_0_5px_#22c55e]"></div> SMAN 8 KOTA BENGKULU</li>
+                    </ul>
+                </div>
+
+                <!-- Images -->
+                <p class="font-mono text-[8px] uppercase tracking-widest text-white/40 mb-4"><i class="fas fa-camera mr-1"></i> GALLERY</p>
+                <div class="grid grid-cols-2 gap-[1px] bg-white/20 border border-white/20">
+                    <img src="projek/w-vote-1.png" class="zoomable-img w-full aspect-[4/3] object-cover bg-black grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
+                    <img src="projek/w-vote-2.png" class="zoomable-img w-full aspect-[4/3] object-cover bg-black grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
+                    <img src="projek/w-vote-3.png" class="zoomable-img w-full aspect-[4/3] object-cover bg-black grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
+                    <img src="projek/w-vote-4.png" class="zoomable-img w-full aspect-[4/3] object-cover bg-black grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
+                </div>
+            </div>
+        </div> <!-- END BACK CARD -->
+
+        </div> <!-- END FLIP INNER -->
     </main>
 
     <!-- AVATAR POPUP -->
@@ -190,7 +241,35 @@
         </div>
     </div>
 
-    <audio id="bg-audio" loop></audio>
+    <audio id="bg-audio"></audio>
+
+    <!-- BOTTOM RIGHT ALERT -->
+    <div id="hire-alert" class="fixed bottom-4 right-4 z-50 max-w-[320px] bg-black border border-white p-4 shadow-[8px_8px_0px_rgba(255,255,255,1)] transform translate-y-10 opacity-0 pointer-events-none transition-all duration-700">
+        <button id="close-alert" class="absolute -top-3 -right-3 bg-white text-black w-8 h-8 flex items-center justify-center border border-black hover:bg-black hover:text-white hover:border-white transition-colors z-10 pointer-events-auto">
+            <i class="fas fa-times text-xs"></i>
+        </button>
+        <div class="flex items-start gap-3 relative z-0 pointer-events-auto">
+            <div class="mt-1">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+            <div>
+                <p class="font-sans text-[11px] leading-relaxed text-white">Saya juga open jasa, jadi kalau kamu punya proyek yang ingin diwujudkan, jangan ragu untuk menghubungi saya!</p>
+                <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank" class="inline-block mt-3 font-mono text-[9px] font-bold uppercase tracking-widest border border-white px-4 py-2 hover:bg-white hover:text-black transition-colors duration-300">
+                    HIRE ME
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX POPUP -->
+    <div id="lightbox-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-500 p-4 lg:p-10">
+        <button id="close-lightbox" class="absolute top-6 right-6 w-12 h-12 flex items-center justify-center bg-white text-black hover:bg-black hover:text-white border border-white transition-all z-[110] duration-300">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <div class="relative w-full h-full flex items-center justify-center pointer-events-none">
+            <img id="lightbox-img" src="" alt="Project Preview" class="max-w-full max-h-full object-contain shadow-[0_0_50px_rgba(255,255,255,0.1)] border border-white/10 transform scale-90 transition-transform duration-500 pointer-events-auto">
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

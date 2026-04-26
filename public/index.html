@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFQI | Software Engineering Student | Full-Stack Developer</title>
+    <title>RIFQI | Software Engineering Student | Web Developer</title>
     <meta name="description" content="Crafting digital experiences through minimal code and brutalist design.">
     <meta name="theme-color" content="#000000">
     <meta property="og:title" content="RIFQI | PORTFOLIO">
@@ -49,9 +49,21 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             background-color: #000;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 18px,
-                    rgba(255, 255, 255, 0.025) 18px, rgba(255, 255, 255, 0.025) 19px);
             color: #fff;
+        }
+
+        /* Noise Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
         }
 
         a,
@@ -60,19 +72,16 @@
             cursor: pointer;
         }
 
-        /* Smooth selections */
         ::selection {
             background: #fff;
             color: #000;
         }
 
-        /* Typography utils */
         .outline-text {
             color: transparent;
             -webkit-text-stroke: 1px #fff;
         }
 
-        /* Vinyl Animation */
         .vinyl-spin {
             animation: spin 4s linear infinite;
             animation-play-state: paused;
@@ -88,19 +97,8 @@
             }
         }
 
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-33.333%);
-            }
-        }
-
-        /* Splash Screen */
         #splash {
-            transition: opacity 0.8s ease;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #splash.hidden {
@@ -108,21 +106,43 @@
             pointer-events: none;
         }
 
-        /* Audio Progress Bar */
         .progress-fill {
-            transition: width 0.1s linear;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Remove default link outlines */
-        a:focus,
-        button:focus {
-            outline: none;
-        }
-
-        /* Disable scrollbar for cleaner look */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 0px;
             background: transparent;
+        }
+
+        /* Hover card effect */
+        .social-btn {
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: right;
+        }
+
+        .social-btn:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
     </style>
 </head>
@@ -146,68 +166,98 @@
 
         <!-- PROFILE CARD -->
         <div id="card-front"
-            class="w-full bg-white grid grid-cols-1 gap-[1px] border border-white shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+            class="w-full bg-black flex flex-col gap-0 overflow-hidden rounded-[2rem] shadow-[0_30px_100px_rgba(0,0,0,1),0_0_50px_rgba(255,255,255,0.02)]">
 
             <!-- HEADER -->
-            <div
-                class="bg-black p-6 md:p-10 flex flex-col justify-end min-h-[140px] relative overflow-hidden group">
-
-                <div
-                    class="absolute -right-4 -top-4 opacity-[0.03] font-serif text-[10rem] leading-none tracking-tighter pointer-events-none group-hover:scale-105 group-hover:opacity-10 transition-all duration-1000">
-                    R.</div>
-                <h1
-                    class="font-serif text-[4.5rem] md:text-[5.5rem] uppercase leading-none tracking-tighter mb-2 hover:outline-text transition-all duration-500 relative z-10">
-                    RIFQI<span class="text-white/20">.</span></h1>
-                <p class="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white relative z-10">
-                    Software Engineering Student</p>
-                <p class="font-mono text-[9px] uppercase tracking-[0.2em] mt-1 text-white/50 relative z-10">
-                    Full-Stack Developer</p>
-            </div>
-
-            <!-- AVATAR -->
-            <div id="avatar-btn"
-                class="bg-black py-8 flex justify-center items-center group cursor-pointer border-b border-white/10">
-                <div class="w-48 h-48 overflow-hidden relative border border-white/20 rounded-2xl">
-                    <img src="2.png" alt="Rifqi"
-                        class="w-full h-full object-cover grayscale transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-                        <span class="font-mono text-[10px] uppercase tracking-widest text-white">VIEW</span>
+            <div class="bg-black p-10 md:p-14 flex flex-col justify-end min-h-[200px] relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h1
+                        class="font-serif text-[4.5rem] md:text-[5.5rem] uppercase leading-[0.85] tracking-tighter mb-6">
+                        RIFQI<br><span class="opacity-20 italic">ARDIAN</span>
+                    </h1>
+                    <div class="flex items-center gap-4">
+                        <div class="h-[1px] w-8 bg-white/30"></div>
+                        <p class="font-mono text-[9px] uppercase tracking-[0.4em] text-white/60">
+                            Web Developer
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- LINKS 1 (2 Cols) -->
-            <div class="bg-black grid grid-cols-2 gap-[1px]">
-                <a href="https://github.com/RifqiArdian09" target="_blank"
-                    class="social-btn bg-black flex flex-col items-center justify-center gap-3 p-6 hover:bg-white hover:text-black transition-colors duration-300 group">
-                    <i class="fab fa-github text-3xl group-hover:-rotate-12 transition-transform duration-300"></i>
-                    <span class="font-mono uppercase text-[10px] tracking-widest font-bold">Github</span>
-                </a>
-                <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank"
-                    class="social-btn bg-black flex flex-col items-center justify-center gap-3 p-6 hover:bg-white hover:text-black transition-colors duration-300 group">
-                    <i
-                        class="fab fa-linkedin-in text-3xl group-hover:rotate-12 transition-transform duration-300"></i>
-                    <span class="font-mono uppercase text-[10px] tracking-widest font-bold">LinkedIn</span>
-                </a>
+            <!-- AVATAR -->
+            <div class="bg-black py-8 flex justify-center items-center">
+                <div
+                    class="w-56 h-56 overflow-hidden relative rounded-[2.5rem] shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
+                    <img src="2.png" alt="Rifqi"
+                        class="w-full h-full object-cover grayscale transition-all duration-700 hover:grayscale-0 hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60">
+                    </div>
+                </div>
             </div>
 
-            <!-- LINKS 2 (3 Cols) -->
-            <div class="bg-black grid grid-cols-3 gap-[1px]">
-                <a href="https://www.instagram.com/rifqiard._/" target="_blank"
-                    class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
-                    <i class="fab fa-instagram text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Insta</span>
-                </a>
+            <!-- LINKS (Vertical List) -->
+            <div class="bg-black flex flex-col p-4 gap-2">
                 <a href="https://rifqiardian.my.id/" target="_blank"
-                    class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
-                    <i class="fas fa-globe text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Web</span>
+                    class="social-btn bg-white/5 rounded-2xl flex items-center justify-between p-6 group">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                            <i class="fas fa-globe text-xl"></i>
+                        </div>
+                        <span class="font-mono uppercase text-[11px] tracking-widest font-bold">Website</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
                 </a>
+                <a href="https://github.com/RifqiArdian09" target="_blank"
+                    class="social-btn bg-white/5 rounded-2xl flex items-center justify-between p-6 group">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                            <i class="fab fa-github text-xl"></i>
+                        </div>
+                        <span class="font-mono uppercase text-[11px] tracking-widest font-bold">Github</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/rifqi-ardian/" target="_blank"
+                    class="social-btn bg-white/5 rounded-2xl flex items-center justify-between p-6 group">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </div>
+                        <span class="font-mono uppercase text-[11px] tracking-widest font-bold">LinkedIn</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                </a>
+                <a href="https://www.instagram.com/rifqiard._/" target="_blank"
+                    class="social-btn bg-white/5 rounded-2xl flex items-center justify-between p-6 group">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </div>
+                        <span class="font-mono uppercase text-[11px] tracking-widest font-bold">Instagram</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                </a>
+
                 <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank"
-                    class="social-btn bg-black flex flex-col items-center justify-center gap-2 p-5 hover:bg-white hover:text-black transition-colors duration-300 group">
-                    <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="font-mono text-[9px] uppercase tracking-widest mt-2">Chat</span>
+                    class="social-btn bg-white/5 rounded-2xl flex items-center justify-between p-6 group">
+                    <div class="flex items-center gap-5">
+                        <div
+                            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </div>
+                        <span class="font-mono uppercase text-[11px] tracking-widest font-bold">WhatsApp</span>
+                    </div>
+                    <i
+                        class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
                 </a>
             </div>
 
@@ -216,11 +266,8 @@
                 <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-4">
                         <div
-                            class="relative w-10 h-10 border border-white/20 rounded-full flex items-center justify-center overflow-hidden">
-                            <div
-                                class="absolute inset-0 border-t border-white/40 rounded-full vinyl-spin opacity-50">
-                            </div>
-                            <i class="fas fa-record-vinyl text-xl vinyl-spin" id="vinyl-icon"></i>
+                            class="relative w-10 h-10 bg-white/5 rounded-full flex items-center justify-center overflow-hidden shadow-inner">
+                            <i class="fas fa-record-vinyl text-xl vinyl-spin opacity-60" id="vinyl-icon"></i>
                         </div>
                         <div class="min-w-0">
                             <div
@@ -232,7 +279,7 @@
                                 MIDNIGHT</div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-2.5 rounded-full">
+                    <div class="flex items-center gap-4 bg-white/5 px-4 py-2.5 rounded-full shadow-lg">
                         <i class="fas fa-step-backward text-[10px] cursor-pointer hover:text-white/50 transition-colors"
                             id="prev-btn"></i>
                         <i class="fas fa-play text-sm cursor-pointer hover:text-white/50 transition-colors"
@@ -254,34 +301,7 @@
         </div>
     </main>
 
-    <!-- AVATAR POPUP -->
-    <div id="avatar-popup"
-        class="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 px-4">
-        <div class="bg-white text-black w-full max-w-[360px] border border-white relative shadow-2xl transform scale-95 transition-transform duration-300"
-            id="popup-content">
-            <button id="close-popup"
-                class="absolute top-0 right-0 w-12 h-12 flex items-center justify-center bg-black text-white hover:bg-white hover:text-black border-l border-b border-black transition-colors z-10">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="p-6 pt-12">
-                <img src="2.png" alt="Rifqi"
-                    class="w-full aspect-square object-cover grayscale mb-6 border border-black">
-                <h2 class="font-serif text-3xl uppercase tracking-tighter mb-1">Rifqi Ardian</h2>
-                <p class="font-mono text-[10px] uppercase tracking-[0.2em] opacity-60 mb-6">Full-Stack Developer</p>
-                <div class="font-sans text-xs leading-relaxed font-medium border-t border-black/20 pt-4">
-                    <p class="mb-3">Siswa Rekayasa Perangkat Lunak (Software Engineering Student).</p>
-                    <p>Terbuka untuk kolaborasi atau jasa pembuatan website, dari desain antarmuka hingga pengembangan
-                        sistem backend.</p>
-                </div>
-                <div class="mt-6">
-                    <a href="https://wa.me/message/2FOKORC6QSLSI1" target="_blank"
-                        class="block w-full bg-black text-white text-center py-4 font-mono text-[10px] uppercase tracking-widest hover:bg-white hover:text-black border border-black transition-colors duration-300">
-                        HIRE ME / CONTACT
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <audio id="bg-audio"></audio>
 

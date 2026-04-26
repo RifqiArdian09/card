@@ -189,31 +189,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 2500);
 
-    // ── Avatar Popup ────────────────────────────────────────────────
-    const avatarBtn = document.getElementById('avatar-btn');
-    const avatarPopup = document.getElementById('avatar-popup');
-    const closePopup = document.getElementById('close-popup');
-    const popupContent = document.getElementById('popup-content');
 
-    if (avatarBtn && avatarPopup && closePopup && popupContent) {
-        avatarBtn.addEventListener('click', () => {
-            avatarPopup.classList.remove('opacity-0', 'pointer-events-none');
-            popupContent.classList.remove('scale-95');
-            popupContent.classList.add('scale-100');
-        });
-
-        function closeAvatarPopup() {
-            avatarPopup.classList.add('opacity-0', 'pointer-events-none');
-            popupContent.classList.remove('scale-100');
-            popupContent.classList.add('scale-95');
-        }
-
-        closePopup.addEventListener('click', closeAvatarPopup);
-
-        avatarPopup.addEventListener('click', (e) => {
-            if (e.target === avatarPopup) {
-                closeAvatarPopup();
-            }
-        });
-    }
 });

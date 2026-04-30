@@ -167,6 +167,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ── Visibility Change Handler ──────────────────────────────────
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (isPlaying) {
+                bgAudio.pause();
+                vinylIcon.classList.remove('playing');
+            }
+        } else {
+            if (isPlaying) {
+                bgAudio.play().catch(() => { });
+                vinylIcon.classList.add('playing');
+            }
+        }
+    });
+
     // ── HUD dynamics ──────────────────────────────────────────────
     const hudLoad = document.getElementById('hud-load');
     const hudStatus = document.getElementById('hud-status');
